@@ -1,35 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { League, type LeagueDocument } from './schemas/league.schema.js';
-import { Team, type TeamDocument } from './schemas/team.schema.js';
-import { Title, type TitleDocument } from './schemas/title.schema.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { League } from './entities/league.entity.js';
+import { Team } from './entities/team.entity.js';
+import { Title } from './entities/title.entity.js';
 
 @Injectable()
 export class CatalogsService {
   constructor(
-    @InjectModel(League.name) readonly leagueModel: Model<LeagueDocument>,
-    @InjectModel(Team.name) readonly teamModel: Model<TeamDocument>,
-    @InjectModel(Title.name) readonly titleModel: Model<TitleDocument>,
+    @InjectRepository(League) private readonly leagueRepo: Repository<League>,
+    @InjectRepository(Team) private readonly teamRepo: Repository<Team>,
+    @InjectRepository(Title) private readonly titleRepo: Repository<Title>,
   ) {}
 
   findAllLeagues() {
-    return this.leagueModel.find().sort({ pais: 1, nombre: 1 }).lean().exec();
+    return this.leagueRepo.find({ order: { pais: 'ASC', nombre: 'ASC' } });
   }
 
   findAllTeams() {
-    return this.teamModel.find().sort({ nombre: 1 }).lean().exec();
+    return this.teamRepo.find({ order: { nombre: 'ASC' } });
   }
 
-  findTeamsByLeague(ligaId: string) {
-    return this.teamModel.find({ ligaId }).sort({ nombre: 1 }).lean().exec();
+  findTeamsByLeague(ligaId: number) {
+    return this.teamRepo.find({ where: { ligaId }, order: { nombre: 'ASC' } });
   }
 
   findAllTitles() {
-    return this.titleModel.find().sort({ nombre: 1 }).lean().exec();
+    return this.titleRepo.find({ order: { nombre: 'ASC' } });
   }
 
-  teamIdsForLeague(ligaId: string) {
-    return this.teamModel.find({ ligaId }).distinct('_id').exec();
+  async teamIdsForLeague(ligaId: number): Promise<number[]> {
+    const teams = await this.teamRepo.find({ where: { ligaId }, select: { id: true } });
+    return teams.map((team) => team.id);
   }
 }

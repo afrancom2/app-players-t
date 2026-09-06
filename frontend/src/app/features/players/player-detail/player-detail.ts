@@ -47,7 +47,7 @@ export class PlayerDetail implements OnInit {
     if (!confirmed) return;
 
     try {
-      await this.playersService.remove(player._id);
+      await this.playersService.remove(player.id);
       this.toast.success('Jugador eliminado.');
       await this.router.navigateByUrl('/jugadores');
     } catch {

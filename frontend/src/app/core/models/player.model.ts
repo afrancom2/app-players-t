@@ -2,13 +2,13 @@ export type Posicion = 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero';
 export type Estado = 'activo' | 'retirado';
 
 export interface ClubRef {
-  _id: string;
+  id: string;
   nombre: string;
   ligaId: string;
 }
 
 export interface TituloRef {
-  _id: string;
+  id: string;
   nombre: string;
 }
 
@@ -31,7 +31,7 @@ export interface PalmaresItem {
 }
 
 export interface Player {
-  _id: string;
+  id: string;
   nombreCompleto: string;
   nacionalidad: string;
   fechaNacimiento: string;

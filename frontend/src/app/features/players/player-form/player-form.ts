@@ -89,16 +89,16 @@ export class PlayerForm implements OnInit {
     for (const item of player.trayectoria) {
       this.addTrayectoria({
         ligaId: item.clubId.ligaId,
-        clubId: item.clubId._id,
+        clubId: item.clubId.id,
         anioInicio: item.anioInicio,
         anioFin: item.anioFin ?? null,
       });
     }
     for (const item of player.palmares) {
       this.addPalmares({
-        tituloId: item.tituloId._id,
+        tituloId: item.tituloId.id,
         cantidad: item.cantidad,
-        clubId: item.clubId?._id ?? '',
+        clubId: item.clubId?.id ?? '',
       });
     }
   }
@@ -196,7 +196,7 @@ export class PlayerForm implements OnInit {
         ? await this.playersService.update(this.playerId!, payload)
         : await this.playersService.create(payload);
       this.toast.success(this.isEditMode ? 'Cambios guardados.' : 'Jugador creado.');
-      await this.router.navigate(['/jugadores', saved._id]);
+      await this.router.navigate(['/jugadores', saved.id]);
     } catch {
       this.toast.error('No se pudo guardar el jugador.');
     } finally {

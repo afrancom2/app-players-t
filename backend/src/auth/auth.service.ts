@@ -23,7 +23,7 @@ export class AuthService {
     }
 
     const payload: JwtPayload = {
-      sub: user.id,
+      sub: String(user.id),
       email: user.email,
       nombre: user.nombre,
       role: user.role,
@@ -32,7 +32,7 @@ export class AuthService {
     return {
       accessToken: await this.jwtService.signAsync(payload),
       user: {
-        id: user.id,
+        id: String(user.id),
         email: user.email,
         nombre: user.nombre,
         role: user.role,

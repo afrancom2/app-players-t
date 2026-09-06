@@ -81,8 +81,8 @@
                 <label>Liga</label>
                 <select formControlName="ligaId" (change)="onRowLeagueChange($index)">
                   <option value="">Selecciona una liga</option>
-                  @for (liga of catalogs.leagues(); track liga._id) {
-                    <option [value]="liga._id">{{ liga.nombre }}</option>
+                  @for (liga of catalogs.leagues(); track liga.id) {
+                    <option [value]="liga.id">{{ liga.nombre }}</option>
                   }
                 </select>
               </div>
@@ -90,8 +90,8 @@
                 <label>Club</label>
                 <select formControlName="clubId">
                   <option value="">Selecciona un club</option>
-                  @for (team of teamsForRow($index); track team._id) {
-                    <option [value]="team._id">{{ team.nombre }}</option>
+                  @for (team of teamsForRow($index); track team.id) {
+                    <option [value]="team.id">{{ team.nombre }}</option>
                   }
                 </select>
               </div>
@@ -138,8 +138,8 @@
                 <label>Título</label>
                 <select formControlName="tituloId">
                   <option value="">Selecciona un título</option>
-                  @for (title of catalogs.titles(); track title._id) {
-                    <option [value]="title._id">{{ title.nombre }}</option>
+                  @for (title of catalogs.titles(); track title.id) {
+                    <option [value]="title.id">{{ title.nombre }}</option>
                   }
                 </select>
               </div>
@@ -151,8 +151,8 @@
                 <label>Club (opcional)</label>
                 <select formControlName="clubId">
                   <option value="">—</option>
-                  @for (team of catalogs.teams(); track team._id) {
-                    <option [value]="team._id">{{ team.nombre }}</option>
+                  @for (team of catalogs.teams(); track team.id) {
+                    <option [value]="team.id">{{ team.nombre }}</option>
                   }
                 </select>
               </div>

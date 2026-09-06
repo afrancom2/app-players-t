@@ -95,7 +95,7 @@ export class PlayerList implements OnInit {
   }
 
   openPlayer(player: Player): void {
-    void this.router.navigate(['/jugadores', player._id]);
+    void this.router.navigate(['/jugadores', player.id]);
   }
 
   leagueName(liga: League): string {

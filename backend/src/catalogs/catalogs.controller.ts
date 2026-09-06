@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { CatalogsService } from './catalogs.service.js';
 
 @Controller('catalogs')
@@ -11,7 +11,7 @@ export class CatalogsController {
   }
 
   @Get('leagues/:id/teams')
-  teamsByLeague(@Param('id') id: string) {
+  teamsByLeague(@Param('id', ParseIntPipe) id: number) {
     return this.catalogsService.findTeamsByLeague(id);
   }
 

@@ -1,112 +1,181 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, type QueryFilter } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsWhere, ILike, In, Repository } from 'typeorm';
 import { CatalogsService } from '../catalogs/catalogs.service.js';
 import { CreatePlayerDto } from './dto/create-player.dto.js';
 import { QueryPlayerDto } from './dto/query-player.dto.js';
 import { UpdatePlayerDto } from './dto/update-player.dto.js';
+import { Estado } from './enums/estado.enum.js';
+import { Palmares } from './entities/palmares.entity.js';
+import { Player } from './entities/player.entity.js';
+import { Trayectoria } from './entities/trayectoria.entity.js';
 import { getClubActual } from './helpers/get-club-actual.js';
-import { Player, type PlayerDocument } from './schemas/player.schema.js';
 
-const POPULATE = [
-  { path: 'trayectoria.clubId', select: 'nombre ligaId' },
-  { path: 'palmares.tituloId', select: 'nombre' },
-  { path: 'palmares.clubId', select: 'nombre ligaId' },
-];
+const RELATIONS = {
+  trayectoria: { club: true },
+  palmares: { titulo: true, club: true },
+} as const;
 
 @Injectable()
 export class PlayersService {
   constructor(
-    @InjectModel(Player.name) private readonly playerModel: Model<PlayerDocument>,
+    @InjectRepository(Player) private readonly playerRepo: Repository<Player>,
+    @InjectRepository(Trayectoria) private readonly trayectoriaRepo: Repository<Trayectoria>,
+    @InjectRepository(Palmares) private readonly palmaresRepo: Repository<Palmares>,
     private readonly catalogsService: CatalogsService,
   ) {}
 
   async findAll(query: QueryPlayerDto) {
-    const filter: QueryFilter<Player> = {};
-
-    if (query.posicion) {
-      filter.posicion = query.posicion;
-    }
-    if (query.estado) {
-      filter.estado = query.estado;
-    }
-    if (query.search) {
-      filter.nombreCompleto = { $regex: escapeRegex(query.search), $options: 'i' };
-    }
-
-    if (query.equipo) {
-      filter['trayectoria.clubId'] = query.equipo;
-    } else if (query.liga) {
-      const teamIds = await this.catalogsService.teamIdsForLeague(query.liga);
-      filter['trayectoria.clubId'] = { $in: teamIds };
-    }
-
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
 
-    const [items, total] = await Promise.all([
-      this.playerModel
-        .find(filter)
-        .collation({ locale: 'es', strength: 1 })
-        .sort({ nombreCompleto: 1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .populate(POPULATE)
-        .lean()
-        .exec(),
-      this.playerModel.countDocuments(filter).exec(),
-    ]);
+    const where: FindOptionsWhere<Player> = {};
+    if (query.posicion) where.posicion = query.posicion;
+    if (query.estado) where.estado = query.estado;
+    if (query.search) where.nombreCompleto = ILike(`%${query.search}%`);
 
-    return {
-      items: items.map(withClubActual),
-      total,
-      page,
-      limit,
-    };
+    let teamIds: number[] | null = null;
+    if (query.equipo) {
+      teamIds = [query.equipo];
+    } else if (query.liga) {
+      teamIds = await this.catalogsService.teamIdsForLeague(query.liga);
+    }
+
+    if (teamIds !== null) {
+      if (teamIds.length === 0) {
+        return { items: [], total: 0, page, limit };
+      }
+      const rows = await this.trayectoriaRepo
+        .createQueryBuilder('t')
+        .select('DISTINCT t.player_id', 'playerId')
+        .where('t.club_id IN (:...ids)', { ids: teamIds })
+        .getRawMany<{ playerId: number }>();
+      const playerIds = rows.map((row) => row.playerId);
+      if (playerIds.length === 0) {
+        return { items: [], total: 0, page, limit };
+      }
+      where.id = In(playerIds);
+    }
+
+    const [items, total] = await this.playerRepo.findAndCount({
+      where,
+      relations: RELATIONS,
+      order: { nombreCompleto: 'ASC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { items: items.map((player) => this.toResponse(player)), total, page, limit };
   }
 
-  async findOne(id: string) {
-    const player = await this.playerModel.findById(id).populate(POPULATE).lean().exec();
+  async findOne(id: number) {
+    const player = await this.playerRepo.findOne({ where: { id }, relations: RELATIONS });
     if (!player) {
       throw new NotFoundException('Jugador no encontrado');
     }
-    return withClubActual(player);
+    return this.toResponse(player);
   }
 
   async create(dto: CreatePlayerDto) {
-    const created = await this.playerModel.create(dto);
-    return this.findOne(created.id);
+    const player = this.playerRepo.create({
+      nombreCompleto: dto.nombreCompleto,
+      nacionalidad: dto.nacionalidad,
+      fechaNacimiento: dto.fechaNacimiento,
+      posicion: dto.posicion,
+      fotoUrl: dto.fotoUrl,
+      biografia: dto.biografia,
+      estado: dto.estado,
+      anioRetiro: dto.estado === Estado.RETIRADO ? dto.anioRetiro : undefined,
+      seleccionNombre: dto.seleccion?.nombre,
+      seleccionAnioInicio: dto.seleccion?.anioInicio,
+      seleccionAnioFin: dto.seleccion?.anioFin,
+      trayectoria: dto.trayectoria.map((item) => this.trayectoriaRepo.create(item)),
+      palmares: dto.palmares.map((item) => this.palmaresRepo.create(item)),
+    });
+
+    const saved = await this.playerRepo.save(player);
+    return this.findOne(saved.id);
   }
 
-  async update(id: string, dto: UpdatePlayerDto) {
-    const update = Object.fromEntries(
-      Object.entries(dto).filter(([, value]) => value !== undefined),
-    );
-
-    const updated = await this.playerModel.findByIdAndUpdate(id, { $set: update }, { new: true }).exec();
-    if (!updated) {
+  async update(id: number, dto: UpdatePlayerDto) {
+    const player = await this.playerRepo.findOne({ where: { id }, relations: RELATIONS });
+    if (!player) {
       throw new NotFoundException('Jugador no encontrado');
     }
-    return this.findOne(updated.id);
+
+    if (dto.nombreCompleto !== undefined) player.nombreCompleto = dto.nombreCompleto;
+    if (dto.nacionalidad !== undefined) player.nacionalidad = dto.nacionalidad;
+    if (dto.fechaNacimiento !== undefined) player.fechaNacimiento = dto.fechaNacimiento;
+    if (dto.posicion !== undefined) player.posicion = dto.posicion;
+    if (dto.fotoUrl !== undefined) player.fotoUrl = dto.fotoUrl;
+    if (dto.biografia !== undefined) player.biografia = dto.biografia;
+    if (dto.estado !== undefined) player.estado = dto.estado;
+    if (dto.anioRetiro !== undefined) player.anioRetiro = dto.anioRetiro;
+    if (player.estado !== Estado.RETIRADO) player.anioRetiro = undefined;
+
+    if (dto.seleccion !== undefined) {
+      player.seleccionNombre = dto.seleccion?.nombre;
+      player.seleccionAnioInicio = dto.seleccion?.anioInicio;
+      player.seleccionAnioFin = dto.seleccion?.anioFin;
+    }
+
+    if (dto.trayectoria !== undefined) {
+      player.trayectoria = dto.trayectoria.map((item) => this.trayectoriaRepo.create(item));
+    }
+    if (dto.palmares !== undefined) {
+      player.palmares = dto.palmares.map((item) => this.palmaresRepo.create(item));
+    }
+
+    await this.playerRepo.save(player);
+    return this.findOne(id);
   }
 
-  async remove(id: string) {
-    const deleted = await this.playerModel.findByIdAndDelete(id).exec();
-    if (!deleted) {
+  async remove(id: number) {
+    const player = await this.playerRepo.findOne({ where: { id } });
+    if (!player) {
       throw new NotFoundException('Jugador no encontrado');
     }
-    return { id: deleted.id };
+    await this.playerRepo.remove(player);
+    return { id };
   }
-}
 
-function escapeRegex(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+  private toResponse(player: Player) {
+    const trayectoria = player.trayectoria.map((item) => ({
+      clubId: { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId },
+      anioInicio: item.anioInicio,
+      anioFin: item.anioFin,
+    }));
 
-function withClubActual<T extends { trayectoria: any[] }>(player: T) {
-  const clubActualItem = getClubActual(player.trayectoria);
-  return {
-    ...player,
-    clubActual: clubActualItem ? clubActualItem.clubId : null,
-  };
+    const palmares = player.palmares.map((item) => ({
+      tituloId: { id: item.titulo.id, nombre: item.titulo.nombre },
+      cantidad: item.cantidad,
+      clubId: item.club ? { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId } : undefined,
+    }));
+
+    const clubActualItem = getClubActual(trayectoria);
+
+    return {
+      id: player.id,
+      nombreCompleto: player.nombreCompleto,
+      nacionalidad: player.nacionalidad,
+      fechaNacimiento: player.fechaNacimiento,
+      posicion: player.posicion,
+      fotoUrl: player.fotoUrl,
+      biografia: player.biografia,
+      trayectoria,
+      seleccion: player.seleccionNombre
+        ? {
+            nombre: player.seleccionNombre,
+            anioInicio: player.seleccionAnioInicio!,
+            anioFin: player.seleccionAnioFin,
+          }
+        : undefined,
+      palmares,
+      estado: player.estado,
+      anioRetiro: player.anioRetiro,
+      clubActual: clubActualItem ? clubActualItem.clubId : null,
+      createdAt: player.createdAt,
+      updatedAt: player.updatedAt,
+    };
+  }
 }

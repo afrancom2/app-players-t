@@ -1,14 +1,17 @@
-import { IsInt, IsMongoId, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class PalmaresItemDto {
-  @IsMongoId()
-  tituloId!: string;
+  @Type(() => Number)
+  @IsInt()
+  tituloId!: number;
 
   @IsInt()
   @Min(1)
   cantidad!: number;
 
   @IsOptional()
-  @IsMongoId()
-  clubId?: string;
+  @Type(() => Number)
+  @IsInt()
+  clubId?: number;
 }

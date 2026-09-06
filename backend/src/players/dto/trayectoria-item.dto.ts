@@ -1,8 +1,10 @@
-import { IsInt, IsMongoId, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class TrayectoriaItemDto {
-  @IsMongoId()
-  clubId!: string;
+  @Type(() => Number)
+  @IsInt()
+  clubId!: number;
 
   @IsInt()
   @Min(1900)

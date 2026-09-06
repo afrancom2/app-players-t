@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsMongoId, IsOptional, IsString, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Estado } from '../enums/estado.enum.js';
 import { Posicion } from '../enums/posicion.enum.js';
 
@@ -17,12 +17,14 @@ export class QueryPlayerDto {
   estado?: Estado;
 
   @IsOptional()
-  @IsMongoId()
-  liga?: string;
+  @Type(() => Number)
+  @IsInt()
+  liga?: number;
 
   @IsOptional()
-  @IsMongoId()
-  equipo?: string;
+  @Type(() => Number)
+  @IsInt()
+  equipo?: number;
 
   @IsOptional()
   @Type(() => Number)

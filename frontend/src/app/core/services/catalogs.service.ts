@@ -27,9 +27,14 @@ export class CatalogsService {
       firstValueFrom(this.http.get<Team[]>(`${API_BASE_URL}/catalogs/teams`)),
       firstValueFrom(this.http.get<Title[]>(`${API_BASE_URL}/catalogs/titles`)),
     ]).then(([leagues, teams, titles]) => {
-      this.leaguesSignal.set(leagues);
-      this.teamsSignal.set(teams);
-      this.titlesSignal.set(titles);
+      // El backend devuelve ids numéricos (Postgres); los normalizamos a
+      // string aquí para que el resto del frontend los trate como opacos
+      // (selects, comparaciones, rutas) sin preocuparse por el tipo real.
+      this.leaguesSignal.set(leagues.map((liga) => ({ ...liga, id: String(liga.id) })));
+      this.teamsSignal.set(
+        teams.map((team) => ({ ...team, id: String(team.id), ligaId: String(team.ligaId) })),
+      );
+      this.titlesSignal.set(titles.map((title) => ({ ...title, id: String(title.id) })));
       this.loaded = true;
     });
 
@@ -41,12 +46,12 @@ export class CatalogsService {
   }
 
   teamName(clubId: string): string {
-    return this.teamsSignal().find((team) => team._id === clubId)?.nombre ?? '—';
+    return this.teamsSignal().find((team) => team.id === clubId)?.nombre ?? '—';
   }
 
   leagueOfTeam(clubId: string): League | undefined {
-    const team = this.teamsSignal().find((t) => t._id === clubId);
+    const team = this.teamsSignal().find((t) => t.id === clubId);
     if (!team) return undefined;
-    return this.leaguesSignal().find((liga) => liga._id === team.ligaId);
+    return this.leaguesSignal().find((liga) => liga.id === team.ligaId);
   }
 }

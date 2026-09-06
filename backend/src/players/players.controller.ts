@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { Role } from '../auth/enums/role.enum.js';
 import { CreatePlayerDto } from './dto/create-player.dto.js';
@@ -16,7 +26,7 @@ export class PlayersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.playersService.findOne(id);
   }
 
@@ -28,13 +38,13 @@ export class PlayersController {
 
   @Roles(Role.ADMIN)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePlayerDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdatePlayerDto) {
     return this.playersService.update(id, dto);
   }
 
   @Roles(Role.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.playersService.remove(id);
   }
 }

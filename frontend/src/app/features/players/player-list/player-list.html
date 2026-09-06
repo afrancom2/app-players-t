@@ -25,15 +25,15 @@
 
     <select [(ngModel)]="ligaId" (ngModelChange)="onLeagueChange()">
       <option value="">Liga: todas</option>
-      @for (liga of catalogs.leagues(); track liga._id) {
-        <option [value]="liga._id">{{ leagueName(liga) }}</option>
+      @for (liga of catalogs.leagues(); track liga.id) {
+        <option [value]="liga.id">{{ leagueName(liga) }}</option>
       }
     </select>
 
     <select [(ngModel)]="equipoId" (ngModelChange)="applyFilters()" [disabled]="!ligaId">
       <option value="">Equipo: todos</option>
-      @for (team of teamsForSelectedLeague; track team._id) {
-        <option [value]="team._id">{{ team.nombre }}</option>
+      @for (team of teamsForSelectedLeague; track team.id) {
+        <option [value]="team.id">{{ team.nombre }}</option>
       }
     </select>
 
@@ -77,7 +77,7 @@
     </div>
   } @else {
     <div class="grid">
-      @for (player of players(); track player._id) {
+      @for (player of players(); track player.id) {
         <button class="card-player" (click)="openPlayer(player)">
           <div class="photo">
             <app-player-photo [nombre]="player.nombreCompleto" [posicion]="player.posicion" [fotoUrl]="player.fotoUrl" />
