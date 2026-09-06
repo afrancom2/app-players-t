@@ -1,0 +1,15 @@
+@if (auth.isAuthenticated()) {
+  <nav class="topnav">
+    <a routerLink="/jugadores" class="brand">
+      <span class="dot"></span> Jugadores
+    </a>
+    <div class="navright">
+      <span class="mono user-chip">{{ auth.user()?.nombre }} · {{ auth.user()?.role }}</span>
+      <button class="btn btn-secondary" (click)="logout()">Salir</button>
+    </div>
+  </nav>
+}
+
+<router-outlet />
+<app-toast-container />
+<app-confirm-dialog />

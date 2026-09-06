@@ -1,0 +1,103 @@
+<div class="page">
+  <div class="topbar">
+    <div>
+      <span class="eyebrow">Jugadores</span>
+      <h1>{{ total() }} fichados</h1>
+    </div>
+    @if (auth.isAdmin()) {
+      <a class="btn btn-gold" routerLink="/jugadores/nuevo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Nueva ficha
+      </a>
+    }
+  </div>
+
+  <div class="filters">
+    <div class="searchbox">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input
+        type="search"
+        placeholder="Buscar por nombre"
+        [(ngModel)]="search"
+        (keyup.enter)="applyFilters()"
+      />
+    </div>
+
+    <select [(ngModel)]="ligaId" (ngModelChange)="onLeagueChange()">
+      <option value="">Liga: todas</option>
+      @for (liga of catalogs.leagues(); track liga._id) {
+        <option [value]="liga._id">{{ leagueName(liga) }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="equipoId" (ngModelChange)="applyFilters()" [disabled]="!ligaId">
+      <option value="">Equipo: todos</option>
+      @for (team of teamsForSelectedLeague; track team._id) {
+        <option [value]="team._id">{{ team.nombre }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="posicion" (ngModelChange)="applyFilters()">
+      <option value="">Posición: todas</option>
+      @for (pos of posiciones; track pos) {
+        <option [value]="pos">{{ pos }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="estado" (ngModelChange)="applyFilters()">
+      <option value="">Estado: todos</option>
+      <option value="activo">Activo</option>
+      <option value="retirado">Retirado</option>
+    </select>
+
+    <button class="btn btn-secondary" (click)="clearFilters()">Limpiar</button>
+  </div>
+
+  @if (loading()) {
+    <div class="grid">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <app-skeleton-card />
+      }
+    </div>
+  } @else if (players().length === 0) {
+    <div class="empty-state">
+      <h2>Álbum vacío</h2>
+      <p>
+        @if (search || posicion || estado || ligaId) {
+          Sin resultados para estos filtros.
+        } @else {
+          Aún no hay jugadores registrados.
+        }
+      </p>
+      @if (auth.isAdmin() && !(search || posicion || estado || ligaId)) {
+        <a class="btn btn-gold" routerLink="/jugadores/nuevo">Crear el primer jugador</a>
+      } @else if (search || posicion || estado || ligaId) {
+        <button class="btn btn-secondary" (click)="clearFilters()">Limpiar filtros</button>
+      }
+    </div>
+  } @else {
+    <div class="grid">
+      @for (player of players(); track player._id) {
+        <button class="card-player" (click)="openPlayer(player)">
+          <div class="photo">
+            <app-player-photo [nombre]="player.nombreCompleto" [posicion]="player.posicion" [fotoUrl]="player.fotoUrl" />
+            <span class="posbadge">{{ player.posicion.slice(0, 3).toUpperCase() }}</span>
+            <span class="cname">{{ player.nombreCompleto }}</span>
+          </div>
+          <div class="cfoot">
+            <span class="clubchip">{{ player.clubActual?.nombre ?? 'Sin club' }}</span>
+            <app-status-chip [estado]="player.estado" />
+          </div>
+        </button>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="btn btn-secondary" (click)="goToPage(-1)" [disabled]="page() === 1">Anterior</button>
+        <span class="mono">Página {{ page() }} de {{ totalPages }}</span>
+        <button class="btn btn-secondary" (click)="goToPage(1)" [disabled]="page() === totalPages">Siguiente</button>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,184 @@
+@if (loading()) {
+  <div class="loading-state mono">Cargando…</div>
+} @else {
+  <div class="wizard">
+    <div class="whead">
+      <h1>{{ isEditMode ? 'Editar ficha' : 'Nueva ficha' }}</h1>
+      <div class="steps">
+        <button type="button" class="step" [class.on]="step() === 1" (click)="goToStep(1)">
+          <span class="dot">1</span> Datos y foto
+        </button>
+        <span class="stepline"></span>
+        <button type="button" class="step" [class.on]="step() === 2" (click)="goToStep(2)">
+          <span class="dot">2</span> Trayectoria
+        </button>
+        <span class="stepline"></span>
+        <button type="button" class="step" [class.on]="step() === 3" (click)="goToStep(3)">
+          <span class="dot">3</span> Palmarés
+        </button>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      @if (step() === 1) {
+        <div class="panel">
+          <div class="field">
+            <label>Nombre completo</label>
+            <input type="text" formControlName="nombreCompleto" />
+          </div>
+
+          <div class="grid2">
+            <div class="field">
+              <label>Nacionalidad</label>
+              <input type="text" formControlName="nacionalidad" />
+            </div>
+            <div class="field">
+              <label>Fecha de nacimiento</label>
+              <input type="date" formControlName="fechaNacimiento" />
+            </div>
+            <div class="field">
+              <label>Posición</label>
+              <select formControlName="posicion">
+                @for (pos of posiciones; track pos) {
+                  <option [value]="pos">{{ pos }}</option>
+                }
+              </select>
+            </div>
+            <div class="field">
+              <label>Foto (URL, opcional)</label>
+              <input type="text" formControlName="fotoUrl" placeholder="https://…" />
+            </div>
+            <div class="field">
+              <label>Estado</label>
+              <select formControlName="estado">
+                <option value="activo">Activo</option>
+                <option value="retirado">Retirado</option>
+              </select>
+            </div>
+            @if (form.controls.estado.value === 'retirado') {
+              <div class="field">
+                <label>Año de retiro</label>
+                <input type="number" formControlName="anioRetiro" />
+              </div>
+            }
+          </div>
+
+          <div class="field">
+            <label>Biografía (opcional)</label>
+            <textarea formControlName="biografia" rows="4"></textarea>
+          </div>
+        </div>
+      }
+
+      @if (step() === 2) {
+        <div class="panel">
+          <span class="sectitle">Trayectoria</span>
+          <span class="secsub">Elige primero la liga; el club se filtra automáticamente</span>
+
+          @for (row of trayectoria.controls; track $index) {
+            <div class="rowitem" [formGroup]="row">
+              <div class="field">
+                <label>Liga</label>
+                <select formControlName="ligaId" (change)="onRowLeagueChange($index)">
+                  <option value="">Selecciona una liga</option>
+                  @for (liga of catalogs.leagues(); track liga._id) {
+                    <option [value]="liga._id">{{ liga.nombre }}</option>
+                  }
+                </select>
+              </div>
+              <div class="field">
+                <label>Club</label>
+                <select formControlName="clubId">
+                  <option value="">Selecciona un club</option>
+                  @for (team of teamsForRow($index); track team._id) {
+                    <option [value]="team._id">{{ team.nombre }}</option>
+                  }
+                </select>
+              </div>
+              <div class="field small">
+                <label>Desde</label>
+                <input type="number" formControlName="anioInicio" />
+              </div>
+              <div class="field small">
+                <label>Hasta</label>
+                <input type="number" formControlName="anioFin" placeholder="actual" />
+              </div>
+              <button type="button" class="rmbtn" (click)="removeTrayectoria($index)" aria-label="Quitar club">✕</button>
+            </div>
+          }
+
+          <button type="button" class="addbtn" (click)="addTrayectoria()">+ Agregar club</button>
+
+          <span class="sectitle" style="margin-top: 28px;">Selección nacional (opcional)</span>
+          <div class="grid2">
+            <div class="field">
+              <label>Selección</label>
+              <input type="text" formControlName="seleccionNombre" />
+            </div>
+            <div class="field small">
+              <label>Desde</label>
+              <input type="number" formControlName="seleccionInicio" />
+            </div>
+            <div class="field small">
+              <label>Hasta</label>
+              <input type="number" formControlName="seleccionFin" placeholder="actual" />
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (step() === 3) {
+        <div class="panel">
+          <span class="sectitle">Palmarés</span>
+          <span class="secsub">Título elegido desde el catálogo, con cantidad y club opcional</span>
+
+          @for (row of palmares.controls; track $index) {
+            <div class="rowitem" [formGroup]="row">
+              <div class="field">
+                <label>Título</label>
+                <select formControlName="tituloId">
+                  <option value="">Selecciona un título</option>
+                  @for (title of catalogs.titles(); track title._id) {
+                    <option [value]="title._id">{{ title.nombre }}</option>
+                  }
+                </select>
+              </div>
+              <div class="field small">
+                <label>Cantidad</label>
+                <input type="number" formControlName="cantidad" min="1" />
+              </div>
+              <div class="field">
+                <label>Club (opcional)</label>
+                <select formControlName="clubId">
+                  <option value="">—</option>
+                  @for (team of catalogs.teams(); track team._id) {
+                    <option [value]="team._id">{{ team.nombre }}</option>
+                  }
+                </select>
+              </div>
+              <button type="button" class="rmbtn" (click)="removePalmares($index)" aria-label="Quitar título">✕</button>
+            </div>
+          }
+
+          <button type="button" class="addbtn" (click)="addPalmares()">+ Agregar título</button>
+        </div>
+      }
+
+      <div class="wfoot">
+        <a routerLink="/jugadores" class="btn btn-secondary">Cancelar</a>
+        <div class="wfoot-right">
+          @if (step() > 1) {
+            <button type="button" class="btn btn-secondary" (click)="prevStep()">Atrás</button>
+          }
+          @if (step() < 3) {
+            <button type="button" class="btn btn-primary" (click)="nextStep()">Siguiente</button>
+          } @else {
+            <button type="submit" class="btn btn-gold" [disabled]="saving()">
+              {{ saving() ? 'Guardando…' : (isEditMode ? 'Guardar cambios' : 'Guardar ficha') }}
+            </button>
+          }
+        </div>
+      </div>
+    </form>
+  </div>
+}

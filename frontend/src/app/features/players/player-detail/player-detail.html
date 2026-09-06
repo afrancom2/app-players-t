@@ -1,0 +1,88 @@
+@if (loading()) {
+  <div class="loading-state mono">Cargando ficha…</div>
+} @else if (player(); as p) {
+  <div class="cromo">
+    <div class="hero">
+      <app-player-photo [nombre]="p.nombreCompleto" [posicion]="p.posicion" [fotoUrl]="p.fotoUrl" />
+      <div class="hero-overlay">
+        <div class="hero-top">
+          <a routerLink="/jugadores" class="iconbtn" aria-label="Volver al listado">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          </a>
+          @if (auth.isAdmin()) {
+            <div class="hero-actions">
+              <a class="iconbtn" [routerLink]="['/jugadores', p._id, 'editar']" aria-label="Editar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+              </a>
+              <button class="iconbtn iconbtn-danger" (click)="remove()" aria-label="Eliminar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>
+              </button>
+            </div>
+          }
+        </div>
+        <div class="hero-bottom">
+          <h1>{{ p.nombreCompleto }}</h1>
+          <div class="herotags">
+            <span class="htag">{{ p.posicion }}</span>
+            <span class="htag">{{ p.estado === 'activo' ? 'Activo' : 'Retirado · ' + p.anioRetiro }}</span>
+            <span class="htag">{{ p.nacionalidad }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body">
+      @if (p.biografia) {
+        <div class="block">
+          <span class="blocklabel">Biografía</span>
+          <p class="bio">{{ p.biografia }}</p>
+        </div>
+      }
+
+      <div class="block">
+        <span class="blocklabel">Trayectoria</span>
+        <div class="timeline">
+          @for (item of p.trayectoria; track $index) {
+            <div class="tnode">
+              <span class="tline"></span>
+              <span class="tdot">{{ item.clubId.nombre.slice(0, 3).toUpperCase() }}</span>
+              <span class="tclub">{{ item.clubId.nombre }}</span>
+              <span class="tyears mono">{{ item.anioInicio }}–{{ item.anioFin ?? 'act.' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (p.seleccion) {
+        <div class="block">
+          <span class="blocklabel">Selección nacional</span>
+          <div class="selband">
+            <div>
+              <div class="selname">{{ p.seleccion.nombre }}</div>
+              <div class="selyears mono">{{ p.seleccion.anioInicio }}–{{ p.seleccion.anioFin ?? 'actualidad' }}</div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (p.palmares.length > 0) {
+        <div class="block">
+          <span class="blocklabel">Palmarés · {{ totalTitulos(p) }} títulos</span>
+          <div class="medals">
+            @for (item of p.palmares; track $index) {
+              <div class="medal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"></path></svg>
+                <div>
+                  <div class="mn">{{ item.cantidad }} {{ item.tituloId.nombre }}</div>
+                  @if (item.clubId) {
+                    <div class="mc">{{ item.clubId.nombre }}</div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

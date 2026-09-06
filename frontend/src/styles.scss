@@ -1,0 +1,173 @@
+:root {
+  --bg: #f6f5f0;
+  --surface: #ffffff;
+  --surface-2: #eeece4;
+  --ink: #1b231e;
+  --ink-soft: #485249;
+  --muted: #7a8177;
+  --line: #dcdfd5;
+
+  --accent: #2e6b49;
+  --accent-soft: #e3ede6;
+  --gold: #a97e28;
+  --gold-soft: #f3e9d3;
+  --bad: #a4432f;
+  --bad-soft: #f5e5e0;
+  --blue: #3f6f8a;
+  --blue-soft: #e4edf1;
+
+  --pos-portero: var(--accent);
+  --pos-defensa: var(--gold);
+  --pos-mediocampista: var(--blue);
+  --pos-delantero: var(--bad);
+
+  --radius: 10px;
+  --shadow: 0 8px 22px rgba(20, 26, 20, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Fraunces', Georgia, serif;
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--gold);
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 10px 12px;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---- botones ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid transparent;
+  min-height: 44px;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #255a3d;
+}
+.btn-gold {
+  background: var(--gold);
+  color: #fff;
+}
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.btn-secondary:hover {
+  border-color: var(--ink-soft);
+}
+.btn-danger {
+  background: var(--bad);
+  color: #fff;
+}
+.btn-danger-outline {
+  background: var(--surface);
+  border-color: var(--bad);
+  color: var(--bad);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- chips / badges ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.chip-activo {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.chip-retirado {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+/* ---- card ---- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---- utility ---- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

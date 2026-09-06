@@ -1,0 +1,29 @@
+<div class="login-page">
+  <form class="login-card" (ngSubmit)="submit()">
+    <span class="eyebrow">Administración de jugadores</span>
+    <h1>Iniciar sesión</h1>
+
+    <label class="field">
+      <span>Correo electrónico</span>
+      <input type="email" name="email" [(ngModel)]="email" required autocomplete="username" />
+    </label>
+
+    <label class="field">
+      <span>Contraseña</span>
+      <input type="password" name="password" [(ngModel)]="password" required autocomplete="current-password" />
+    </label>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" class="btn btn-gold" [disabled]="loading()">
+      {{ loading() ? 'Ingresando…' : 'Ingresar' }}
+    </button>
+
+    <p class="hint">
+      Demo: <strong>admin&#64;jugadores.app</strong> / admin1234 (CRUD completo)<br />
+      o <strong>consulta&#64;jugadores.app</strong> / consulta1234 (solo lectura)
+    </p>
+  </form>
+</div>
