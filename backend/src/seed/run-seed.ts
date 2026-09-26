@@ -29,20 +29,74 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   );
 
   console.log('Creando ligas y equipos...');
+  // Top ~55 ligas del mundo (aproximación a la clasificación de la IFFHS;
+  // el sitio oficial no publica ahora mismo una tabla completa verificable
+  // más allá de las primeras ~25 posiciones, así que el orden desde ahí es
+  // una aproximación razonable, no un dato oficial exacto).
   const leaguesData = [
-    { nombre: 'Serie A', pais: 'Italia', equipos: ['Juventus', 'Parma', 'Inter', 'Milan'] },
-    { nombre: 'Ligue 1', pais: 'Francia', equipos: ['Paris Saint-Germain', 'Marsella', 'Lyon'] },
-    { nombre: 'LaLiga', pais: 'España', equipos: ['Real Sociedad', 'Villarreal', 'Athletic Club'] },
-    {
-      nombre: 'Bundesliga',
-      pais: 'Alemania',
-      equipos: ['Bayern Múnich', 'Borussia Dortmund', 'RB Leipzig'],
-    },
+    { nombre: 'Premier League', pais: 'Inglaterra', equipos: ['Manchester City', 'Liverpool', 'Arsenal', 'Manchester United', 'Chelsea', 'Tottenham Hotspur', 'Newcastle United'] },
+    { nombre: 'LaLiga', pais: 'España', equipos: ['Real Sociedad', 'Villarreal', 'Athletic Club', 'Real Madrid', 'Barcelona', 'Atlético de Madrid'] },
+    { nombre: 'Serie A', pais: 'Italia', equipos: ['Juventus', 'Parma', 'Inter', 'Milan', 'Napoli', 'Roma'] },
+    { nombre: 'Bundesliga', pais: 'Alemania', equipos: ['Bayern Múnich', 'Borussia Dortmund', 'RB Leipzig', 'Bayer Leverkusen', 'Eintracht Frankfurt'] },
+    { nombre: 'Ligue 1', pais: 'Francia', equipos: ['Paris Saint-Germain', 'Marsella', 'Lyon', 'Mónaco', 'Lille'] },
+    { nombre: 'Brasileirão', pais: 'Brasil', equipos: ['Flamengo', 'Palmeiras', 'São Paulo', 'Corinthians', 'Grêmio', 'Atlético Mineiro', 'Fluminense'] },
+    { nombre: 'Liga Profesional de Fútbol', pais: 'Argentina', equipos: ['River Plate', 'Boca Juniors', 'Racing Club', 'Independiente', 'San Lorenzo', 'Vélez Sarsfield'] },
+    { nombre: 'Eredivisie', pais: 'Países Bajos', equipos: ['Ajax', 'PSV Eindhoven', 'Feyenoord', 'AZ Alkmaar', 'FC Twente'] },
+    { nombre: 'Primeira Liga', pais: 'Portugal', equipos: ['Benfica', 'Porto', 'Sporting CP', 'Braga', 'Vitória de Guimarães'] },
+    { nombre: 'Süper Lig', pais: 'Turquía', equipos: ['Galatasaray', 'Fenerbahçe', 'Beşiktaş', 'Trabzonspor'] },
+    { nombre: 'Jupiler Pro League', pais: 'Bélgica', equipos: ['Club Brugge', 'Anderlecht', 'Genk', 'Unión Saint-Gilloise'] },
+    { nombre: 'Saudi Pro League', pais: 'Arabia Saudita', equipos: ['Al Hilal', 'Al Nassr', 'Al Ittihad', 'Al Ahli'] },
+    { nombre: 'Liga MX', pais: 'México', equipos: ['América', 'Chivas Guadalajara', 'Cruz Azul', 'Monterrey', 'Tigres UANL'] },
+    { nombre: 'MLS', pais: 'Estados Unidos', equipos: ['LA Galaxy', 'LAFC', 'Inter Miami', 'Seattle Sounders', 'Atlanta United'] },
+    { nombre: 'Scottish Premiership', pais: 'Escocia', equipos: ['Celtic', 'Rangers', 'Aberdeen', 'Hearts'] },
+    { nombre: 'Bundesliga', pais: 'Austria', equipos: ['Red Bull Salzburgo', 'Rapid Viena', 'Sturm Graz', 'Austria Viena'] },
+    { nombre: 'Super League', pais: 'Suiza', equipos: ['Young Boys', 'Basilea', 'Servette', 'Zúrich'] },
+    { nombre: 'Premier Liga', pais: 'Rusia', equipos: ['Zenit San Petersburgo', 'Spartak Moscú', 'CSKA Moscú', 'Dinamo Moscú'] },
+    { nombre: 'Ukrainian Premier League', pais: 'Ucrania', equipos: ['Shakhtar Donetsk', 'Dinamo Kiev', 'Dnipro-1', 'Vorskla Poltava'] },
+    { nombre: 'HNL', pais: 'Croacia', equipos: ['Dinamo Zagreb', 'Hajduk Split', 'Rijeka', 'Osijek'] },
+    { nombre: 'SuperLiga', pais: 'Serbia', equipos: ['Estrella Roja de Belgrado', 'Partizán de Belgrado', 'Vojvodina'] },
+    { nombre: 'Ekstraklasa', pais: 'Polonia', equipos: ['Legia Varsovia', 'Lech Poznan', 'Raków Częstochowa'] },
+    { nombre: 'Fortuna Liga', pais: 'República Checa', equipos: ['Slavia Praga', 'Sparta Praga', 'Viktoria Plzeň'] },
+    { nombre: 'Fortuna Liga', pais: 'Eslovaquia', equipos: ['Slovan Bratislava', 'Spartak Trnava', 'Žilina'] },
+    { nombre: 'Liga I', pais: 'Rumania', equipos: ['FCSB', 'CFR Cluj', 'Universitatea Craiova', 'Rapid Bucarest'] },
+    { nombre: 'Superliga', pais: 'Dinamarca', equipos: ['FC Copenhague', 'Midtjylland', 'Brøndby'] },
+    { nombre: 'Eliteserien', pais: 'Noruega', equipos: ['Bodø/Glimt', 'Molde', 'Rosenborg'] },
+    { nombre: 'Allsvenskan', pais: 'Suecia', equipos: ['Malmö FF', 'AIK', 'Hammarby', 'Djurgården'] },
+    { nombre: 'Super League', pais: 'Grecia', equipos: ['Olympiacos', 'Panathinaikos', 'AEK Atenas', 'PAOK'] },
+    { nombre: "Ligat ha'Al", pais: 'Israel', equipos: ['Maccabi Tel Aviv', 'Maccabi Haifa', 'Hapoel Beer Sheva'] },
+    { nombre: 'First Division', pais: 'Chipre', equipos: ['APOEL', 'Omonia Nicosia', 'AEK Larnaca'] },
+    { nombre: 'Premier League', pais: 'Egipto', equipos: ['Al Ahly', 'Zamalek', 'Pyramids FC'] },
+    { nombre: 'Botola Pro', pais: 'Marruecos', equipos: ['Raja Casablanca', 'Wydad Casablanca', 'FAR Rabat'] },
+    { nombre: 'J1 League', pais: 'Japón', equipos: ['Vissel Kobe', 'Yokohama F. Marinos', 'Kawasaki Frontale', 'Urawa Red Diamonds'] },
+    { nombre: 'K League 1', pais: 'Corea del Sur', equipos: ['Ulsan HD', 'Jeonbuk Hyundai Motors', 'Pohang Steelers'] },
+    { nombre: 'Super League', pais: 'China', equipos: ['Shanghai Port', 'Shandong Taishan', 'Beijing Guoan'] },
+    { nombre: 'A-League', pais: 'Australia', equipos: ['Melbourne City', 'Sydney FC', 'Central Coast Mariners'] },
+    { nombre: 'Categoría Primera A', pais: 'Colombia', equipos: ['Atlético Nacional', 'Millonarios', 'América de Cali', 'Deportivo Cali'] },
+    { nombre: 'LigaPro', pais: 'Ecuador', equipos: ['Barcelona SC', 'Emelec', 'Liga de Quito', 'Independiente del Valle'] },
+    { nombre: 'Primera División', pais: 'Uruguay', equipos: ['Peñarol', 'Nacional', 'Defensor Sporting'] },
+    { nombre: 'Primera División', pais: 'Paraguay', equipos: ['Olimpia', 'Cerro Porteño', 'Libertad'] },
+    { nombre: 'Primera División', pais: 'Chile', equipos: ['Colo-Colo', 'Universidad de Chile', 'Universidad Católica'] },
+    { nombre: 'Liga 1', pais: 'Perú', equipos: ['Universitario de Deportes', 'Alianza Lima', 'Sporting Cristal'] },
+    { nombre: 'Primera División', pais: 'Costa Rica', equipos: ['Saprissa', 'Alajuelense', 'Herediano'] },
+    { nombre: 'División Profesional', pais: 'Bolivia', equipos: ['Bolívar', 'The Strongest', 'Always Ready'] },
+    { nombre: 'Liga FUTVE', pais: 'Venezuela', equipos: ['Deportivo Táchira', 'Caracas FC', 'Metropolitanos'] },
+    { nombre: 'NB I', pais: 'Hungría', equipos: ['Ferencváros', 'Puskás Akadémia', 'Győri ETO'] },
+    { nombre: 'First League', pais: 'Bulgaria', equipos: ['Ludogorets Razgrado', 'CSKA Sofía', 'Levski Sofía'] },
+    { nombre: 'Veikkausliiga', pais: 'Finlandia', equipos: ['HJK Helsinki', 'KuPS Kuopio', 'Inter Turku'] },
+    { nombre: 'Besta deild karla', pais: 'Islandia', equipos: ['Valur', 'KR Reykjavík', 'Breidablik'] },
+    { nombre: 'Stars League', pais: 'Catar', equipos: ['Al Sadd', 'Al Duhail', 'Al Rayyan'] },
+    { nombre: 'Pro League', pais: 'Emiratos Árabes Unidos', equipos: ['Al Ain', 'Shabab Al Ahli', 'Al Wasl'] },
+    { nombre: 'Indian Super League', pais: 'India', equipos: ['Mohun Bagan', 'Bengaluru FC', 'Mumbai City FC'] },
+    { nombre: 'Thai League 1', pais: 'Tailandia', equipos: ['Buriram United', 'Bangkok United', 'Muangthong United'] },
+    { nombre: 'Premier Soccer League', pais: 'Sudáfrica', equipos: ['Mamelodi Sundowns', 'Orlando Pirates', 'Kaizer Chiefs'] },
+    { nombre: 'Ligue Professionnelle 1', pais: 'Túnez', equipos: ['Espérance de Tunis', 'Étoile du Sahel', 'Club Africain'] },
   ];
 
   const teamsByName: Record<string, Team> = {};
-  for (const liga of leaguesData) {
-    const league = await leagueRepo.save(leagueRepo.create({ nombre: liga.nombre, pais: liga.pais }));
+  for (const [index, liga] of leaguesData.entries()) {
+    const league = await leagueRepo.save(
+      leagueRepo.create({ nombre: liga.nombre, pais: liga.pais, orden: index + 1 }),
+    );
     for (const teamName of liga.equipos) {
       teamsByName[teamName] = await teamRepo.save(
         teamRepo.create({ nombre: teamName, ligaId: league.id }),
@@ -231,5 +285,7 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
     }),
   );
 
-  console.log('Seed completo: 4 ligas, catálogo de títulos, 2 usuarios y 4 jugadores.');
+  console.log(
+    `Seed completo: ${leaguesData.length} ligas, catálogo de títulos, 2 usuarios y 4 jugadores.`,
+  );
 }

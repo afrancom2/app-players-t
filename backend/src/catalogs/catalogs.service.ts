@@ -14,7 +14,7 @@ export class CatalogsService {
   ) {}
 
   findAllLeagues() {
-    return this.leagueRepo.find({ order: { pais: 'ASC', nombre: 'ASC' } });
+    return this.leagueRepo.find({ order: { orden: 'ASC', nombre: 'ASC' } });
   }
 
   findAllTeams() {

@@ -1,0 +1,35 @@
+<div class="backdrop" (click)="close()">
+  <div class="dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Selecciona la liga">
+    <div class="dhead">
+      <h3>Selecciona la liga</h3>
+      <button type="button" class="iconbtn" (click)="close()" aria-label="Cerrar">✕</button>
+    </div>
+
+    <input
+      type="text"
+      class="search mono"
+      placeholder="Buscar liga o país…"
+      [value]="search()"
+      (input)="onSearchInput($event)"
+      autofocus
+    />
+
+    <div class="list">
+      @for (liga of results(); track liga.id) {
+        <button type="button" class="option" (click)="choose(liga)">
+          @if (logoFor(liga); as logo) {
+            <img class="logo" [src]="logo" alt="" />
+          } @else {
+            <span class="logo-fallback">{{ initialsFor(liga) }}</span>
+          }
+          <span class="names">
+            <span class="name">{{ liga.nombre }}</span>
+            <span class="country mono">{{ liga.pais }}</span>
+          </span>
+        </button>
+      } @empty {
+        <div class="empty">Sin resultados para "{{ search() }}".</div>
+      }
+    </div>
+  </div>
+</div>

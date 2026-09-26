@@ -12,6 +12,9 @@ export class League {
   @Column()
   pais!: string;
 
+  @Column({ type: 'int', nullable: true })
+  orden!: number | null;
+
   @OneToMany(() => Team, (team) => team.liga)
   equipos!: Relation<Team>[];
 }

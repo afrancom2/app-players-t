@@ -2,10 +2,13 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
+import { LEAGUE_LOGOS } from '../../../core/data/league-logos';
+import type { League } from '../../../core/models/catalog.model';
 import type { Estado, Player, PlayerInput, Posicion } from '../../../core/models/player.model';
 import { POSICIONES } from '../../../core/models/player.model';
 import { CatalogsService } from '../../../core/services/catalogs.service';
 import { PlayersService } from '../../../core/services/players.service';
+import { LeaguePicker } from '../../../shared/ui/league-picker/league-picker';
 import { NationalityPicker } from '../../../shared/ui/nationality-picker/nationality-picker';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 
@@ -13,7 +16,7 @@ type Step = 1 | 2 | 3;
 
 @Component({
   selector: 'app-player-form',
-  imports: [ReactiveFormsModule, RouterLink, NationalityPicker],
+  imports: [ReactiveFormsModule, RouterLink, NationalityPicker, LeaguePicker],
   templateUrl: './player-form.html',
   styleUrl: './player-form.scss',
 })
@@ -31,6 +34,7 @@ export class PlayerForm implements OnInit {
   protected readonly loading = signal(true);
   protected readonly showNationalityPicker = signal(false);
   protected readonly nacionalidadCode = signal('');
+  protected readonly leaguePickerRow = signal<number | null>(null);
 
   private playerId: string | null = null;
 
@@ -142,8 +146,28 @@ export class PlayerForm implements OnInit {
     return ligaId ? this.catalogs.teamsByLeague(ligaId) : [];
   }
 
-  onRowLeagueChange(index: number): void {
+  leagueForRow(index: number): League | undefined {
+    const ligaId = this.trayectoria.at(index).get('ligaId')!.value as string;
+    return ligaId ? this.catalogs.leagues().find((liga) => liga.id === ligaId) : undefined;
+  }
+
+  leagueLogoForRow(index: number): string | null {
+    const liga = this.leagueForRow(index);
+    if (!liga) return null;
+    const file = LEAGUE_LOGOS[`${liga.pais}|${liga.nombre}`];
+    return file ? `leagues/${file}` : null;
+  }
+
+  openLeaguePicker(index: number): void {
+    this.leaguePickerRow.set(index);
+  }
+
+  onLeagueSelected(liga: League): void {
+    const index = this.leaguePickerRow();
+    if (index === null) return;
+    this.trayectoria.at(index).get('ligaId')!.setValue(liga.id);
     this.trayectoria.at(index).get('clubId')!.setValue('');
+    this.leaguePickerRow.set(null);
   }
 
   addPalmares(initial?: { tituloId: string; cantidad: number; clubId: string }): void {

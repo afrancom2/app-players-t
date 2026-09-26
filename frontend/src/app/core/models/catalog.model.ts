@@ -2,6 +2,7 @@ export interface League {
   id: string;
   nombre: string;
   pais: string;
+  orden: number | null;
 }
 
 export interface Team {
