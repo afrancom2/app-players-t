@@ -5,9 +5,14 @@
     </a>
     <div class="navright">
       <span class="mono user-chip">{{ auth.user()?.nombre }} · {{ auth.user()?.role }}</span>
+      <app-theme-toggle />
       <button class="btn btn-secondary" (click)="logout()">Salir</button>
     </div>
   </nav>
+} @else {
+  <div class="anon-theme-toggle">
+    <app-theme-toggle />
+  </div>
 }
 
 <router-outlet />
