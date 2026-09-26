@@ -30,7 +30,14 @@
           <div class="grid2">
             <div class="field">
               <label>Nacionalidad</label>
-              <input type="text" formControlName="nacionalidad" />
+              <button type="button" class="nationality-trigger" (click)="openNationalityPicker()">
+                @if (form.controls.nacionalidad.value) {
+                  <img class="flag" [src]="'flags/' + nacionalidadCode() + '.svg'" alt="" />
+                  <span>{{ form.controls.nacionalidad.value }}</span>
+                } @else {
+                  <span class="placeholder">Selecciona un país…</span>
+                }
+              </button>
             </div>
             <div class="field">
               <label>Fecha de nacimiento</label>
@@ -181,4 +188,11 @@
       </div>
     </form>
   </div>
+
+  @if (showNationalityPicker()) {
+    <app-nationality-picker
+      (closed)="showNationalityPicker.set(false)"
+      (selected)="onNationalitySelected($event)"
+    />
+  }
 }

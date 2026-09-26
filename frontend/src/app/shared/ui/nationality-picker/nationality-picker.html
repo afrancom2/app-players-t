@@ -1,0 +1,28 @@
+<div class="backdrop" (click)="close()">
+  <div class="dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Selecciona la nacionalidad">
+    <div class="dhead">
+      <h3>Selecciona la nacionalidad</h3>
+      <button type="button" class="iconbtn" (click)="close()" aria-label="Cerrar">✕</button>
+    </div>
+
+    <input
+      type="text"
+      class="search mono"
+      placeholder="Buscar país…"
+      [value]="search()"
+      (input)="onSearchInput($event)"
+      autofocus
+    />
+
+    <div class="list">
+      @for (n of results(); track n.name) {
+        <button type="button" class="option" (click)="choose(n.name)">
+          <img class="flag" [src]="'flags/' + n.code + '.svg'" alt="" />
+          <span class="name">{{ n.name }}</span>
+        </button>
+      } @empty {
+        <div class="empty">Sin resultados para "{{ search() }}".</div>
+      }
+    </div>
+  </div>
+</div>

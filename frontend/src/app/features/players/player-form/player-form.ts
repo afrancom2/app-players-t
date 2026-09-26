@@ -1,17 +1,19 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
 import type { Estado, Player, PlayerInput, Posicion } from '../../../core/models/player.model';
 import { POSICIONES } from '../../../core/models/player.model';
 import { CatalogsService } from '../../../core/services/catalogs.service';
 import { PlayersService } from '../../../core/services/players.service';
+import { NationalityPicker } from '../../../shared/ui/nationality-picker/nationality-picker';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
 
 type Step = 1 | 2 | 3;
 
 @Component({
   selector: 'app-player-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, NationalityPicker],
   templateUrl: './player-form.html',
   styleUrl: './player-form.scss',
 })
@@ -27,6 +29,8 @@ export class PlayerForm implements OnInit {
   protected readonly step = signal<Step>(1);
   protected readonly saving = signal(false);
   protected readonly loading = signal(true);
+  protected readonly showNationalityPicker = signal(false);
+  protected readonly nacionalidadCode = signal('');
 
   private playerId: string | null = null;
 
@@ -81,6 +85,11 @@ export class PlayerForm implements OnInit {
       biografia: player.biografia ?? '',
       estado: player.estado,
       anioRetiro: player.anioRetiro ?? null,
+    });
+    this.nacionalidadCode.set(
+      FIFA_NATIONALITIES.find((n) => n.name === player.nacionalidad)?.code ?? '',
+    );
+    this.form.patchValue({
       seleccionNombre: player.seleccion?.nombre ?? '',
       seleccionInicio: player.seleccion?.anioInicio ?? null,
       seleccionFin: player.seleccion?.anioFin ?? null,
@@ -101,6 +110,16 @@ export class PlayerForm implements OnInit {
         clubId: item.clubId?.id ?? '',
       });
     }
+  }
+
+  openNationalityPicker(): void {
+    this.showNationalityPicker.set(true);
+  }
+
+  onNationalitySelected(name: string): void {
+    this.form.controls.nacionalidad.setValue(name);
+    this.nacionalidadCode.set(FIFA_NATIONALITIES.find((n) => n.name === name)?.code ?? '');
+    this.showNationalityPicker.set(false);
   }
 
   addTrayectoria(initial?: { ligaId: string; clubId: string; anioInicio: number; anioFin: number | null }): void {
