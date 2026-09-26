@@ -2,27 +2,34 @@
 
 Módulo de administración de jugadores de fútbol: backend en NestJS + PostgreSQL (TypeORM), frontend en Angular con el diseño visual "Cromo" (tarjetas fotográficas, ficha de detalle con línea de tiempo de clubes y medallas de palmarés).
 
+Proyecto de uso **100% local**: no se despliega en la nube. Todo corre en tu máquina vía Docker.
+
 ## Requisitos
 
-- Node.js 20.19+ (probado con 20.20.2)
-- Docker (para PostgreSQL)
+- Docker Desktop (o Docker Engine + Compose)
+- Node.js 20.19+ (solo si quieres correr backend/frontend fuera de Docker para desarrollar con hot-reload)
 
-## 1. Levantar PostgreSQL
+## Uso rápido (todo con Docker)
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-Esto levanta PostgreSQL en `localhost:5432` (usuario/clave `postgres`/`postgres`, base `jugadores`).
+Esto levanta, en orden, los tres servicios y un respaldo automático:
 
-## 2. Backend (NestJS)
+1. **postgres** — base de datos, con los datos guardados en el volumen `postgres-data` (persisten entre reinicios).
+2. **backend** — espera a que Postgres esté sano, y si la base está **vacía** (primera vez), la puebla automáticamente con catálogos, usuarios y 4 jugadores de ejemplo. Si ya tiene datos (tus propios jugadores cargados), **no los toca**. Queda escuchando en `http://localhost:3000`.
+3. **frontend** — se sirve en `http://localhost:4200`.
+4. **postgres-backup** — hace un respaldo (`pg_dump`) apenas arranca y luego uno diario, guardándolos comprimidos en la carpeta `./backups` de este repo (no se sube a git).
+
+Para ver los logs en vivo: `docker compose logs -f`. Para apagar todo sin perder datos: `docker compose down`. Para apagar y **borrar también los datos** (usar con cuidado): `docker compose down -v`.
+
+### Restaurar un respaldo
+
+Si algo corrompe o borra la base (por ejemplo, un `down -v` sin querer), puedes restaurar el último `.sql.gz` de `./backups`:
 
 ```bash
-cd backend
-npm install
-cp .env.example .env
-npm run seed        # crea las tablas (TypeORM synchronize) y carga catálogos, jugadores y usuarios de ejemplo
-npm run start:dev   # http://localhost:3000
+gunzip -c backups/<archivo>.sql.gz | docker compose exec -T postgres psql -U postgres -d jugadores
 ```
 
 ### Usuarios de prueba (creados por el seed)
@@ -34,7 +41,21 @@ npm run start:dev   # http://localhost:3000
 
 `admin` puede crear, editar y eliminar jugadores. `consulta` solo puede ver.
 
-## 3. Frontend (Angular)
+## Desarrollo (con hot-reload, sin reconstruir contenedores)
+
+Para tocar código y ver los cambios al instante, corre solo Postgres en Docker y backend/frontend directo con Node:
+
+```bash
+docker compose up -d postgres
+```
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+npm run seed        # solo la primera vez, o cuando quieras resetear los datos de ejemplo
+npm run start:dev   # http://localhost:3000
+```
 
 ```bash
 cd frontend
@@ -47,11 +68,6 @@ npm start   # http://localhost:4200
 ```
 backend/    API REST (NestJS + TypeORM + PostgreSQL)
 frontend/   App Angular ("Cromo")
-docker-compose.yml   PostgreSQL local
+docker-compose.yml   Orquesta postgres + backend + frontend + respaldos, todo local
+backups/    Respaldos automáticos de la base de datos (generado, no se sube a git)
 ```
-
-## Despliegue
-
-Ver la guía de despliegue (backend en Docker/Render, frontend en GitHub Pages) más abajo en el historial del proyecto, o pide que se vuelva a generar.
-
-Ver el detalle de endpoints, modelo de datos y decisiones de diseño en `backend/README.md` (si aplica) o en el plan del proyecto.
