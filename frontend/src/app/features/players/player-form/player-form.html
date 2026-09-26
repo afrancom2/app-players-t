@@ -101,12 +101,25 @@
               </div>
               <div class="field">
                 <label>Club</label>
-                <select formControlName="clubId">
-                  <option value="">Selecciona un club</option>
-                  @for (team of teamsForRow($index); track team.id) {
-                    <option [value]="team.id">{{ team.nombre }}</option>
+                <button
+                  type="button"
+                  class="club-trigger"
+                  [disabled]="!leagueForRow($index)"
+                  (click)="openClubPicker($index)"
+                >
+                  @if (teamForRow($index); as team) {
+                    @if (teamLogoForRow($index); as logo) {
+                      <img class="logo" [src]="logo" alt="" />
+                    } @else {
+                      <span class="logo-fallback">{{ team.nombre.slice(0, 2).toUpperCase() }}</span>
+                    }
+                    <span>{{ team.nombre }}</span>
+                  } @else {
+                    <span class="placeholder">{{
+                      leagueForRow($index) ? 'Selecciona un club…' : 'Elige primero una liga'
+                    }}</span>
                   }
-                </select>
+                </button>
               </div>
               <div class="field small">
                 <label>Desde</label>
@@ -206,6 +219,14 @@
     <app-league-picker
       (closed)="leaguePickerRow.set(null)"
       (selected)="onLeagueSelected($event)"
+    />
+  }
+
+  @if (clubPickerRow() !== null) {
+    <app-club-picker
+      [liga]="leagueForRow(clubPickerRow()!)!"
+      (closed)="clubPickerRow.set(null)"
+      (selected)="onClubSelected($event)"
     />
   }
 }

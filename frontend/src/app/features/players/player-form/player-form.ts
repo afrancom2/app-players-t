@@ -3,11 +3,13 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } fr
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
 import { LEAGUE_LOGOS } from '../../../core/data/league-logos';
-import type { League } from '../../../core/models/catalog.model';
+import { TEAM_LOGOS } from '../../../core/data/team-logos';
+import type { League, Team } from '../../../core/models/catalog.model';
 import type { Estado, Player, PlayerInput, Posicion } from '../../../core/models/player.model';
 import { POSICIONES } from '../../../core/models/player.model';
 import { CatalogsService } from '../../../core/services/catalogs.service';
 import { PlayersService } from '../../../core/services/players.service';
+import { ClubPicker } from '../../../shared/ui/club-picker/club-picker';
 import { LeaguePicker } from '../../../shared/ui/league-picker/league-picker';
 import { NationalityPicker } from '../../../shared/ui/nationality-picker/nationality-picker';
 import { ToastService } from '../../../shared/ui/toast/toast.service';
@@ -16,7 +18,7 @@ type Step = 1 | 2 | 3;
 
 @Component({
   selector: 'app-player-form',
-  imports: [ReactiveFormsModule, RouterLink, NationalityPicker, LeaguePicker],
+  imports: [ReactiveFormsModule, RouterLink, NationalityPicker, LeaguePicker, ClubPicker],
   templateUrl: './player-form.html',
   styleUrl: './player-form.scss',
 })
@@ -35,6 +37,7 @@ export class PlayerForm implements OnInit {
   protected readonly showNationalityPicker = signal(false);
   protected readonly nacionalidadCode = signal('');
   protected readonly leaguePickerRow = signal<number | null>(null);
+  protected readonly clubPickerRow = signal<number | null>(null);
 
   private playerId: string | null = null;
 
@@ -141,11 +144,6 @@ export class PlayerForm implements OnInit {
     this.trayectoria.removeAt(index);
   }
 
-  teamsForRow(index: number) {
-    const ligaId = this.trayectoria.at(index).get('ligaId')!.value as string;
-    return ligaId ? this.catalogs.teamsByLeague(ligaId) : [];
-  }
-
   leagueForRow(index: number): League | undefined {
     const ligaId = this.trayectoria.at(index).get('ligaId')!.value as string;
     return ligaId ? this.catalogs.leagues().find((liga) => liga.id === ligaId) : undefined;
@@ -168,6 +166,31 @@ export class PlayerForm implements OnInit {
     this.trayectoria.at(index).get('ligaId')!.setValue(liga.id);
     this.trayectoria.at(index).get('clubId')!.setValue('');
     this.leaguePickerRow.set(null);
+  }
+
+  teamForRow(index: number): Team | undefined {
+    const clubId = this.trayectoria.at(index).get('clubId')!.value as string;
+    return clubId ? this.catalogs.teams().find((team) => team.id === clubId) : undefined;
+  }
+
+  teamLogoForRow(index: number): string | null {
+    const liga = this.leagueForRow(index);
+    const team = this.teamForRow(index);
+    if (!liga || !team) return null;
+    const file = TEAM_LOGOS[`${liga.pais}|${liga.nombre}|${team.nombre}`];
+    return file ? `teams/${file}` : null;
+  }
+
+  openClubPicker(index: number): void {
+    if (!this.leagueForRow(index)) return;
+    this.clubPickerRow.set(index);
+  }
+
+  onClubSelected(team: Team): void {
+    const index = this.clubPickerRow();
+    if (index === null) return;
+    this.trayectoria.at(index).get('clubId')!.setValue(team.id);
+    this.clubPickerRow.set(null);
   }
 
   addPalmares(initial?: { tituloId: string; cantidad: number; clubId: string }): void {

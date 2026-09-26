@@ -166,6 +166,54 @@
   color: var(--muted);
 }
 
+.club-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  font-size: 14px;
+  color: var(--ink);
+}
+.club-trigger:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.club-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.club-trigger .logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 5px;
+  padding: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.club-trigger .logo-fallback {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+}
+.club-trigger .placeholder {
+  color: var(--muted);
+}
+
 .sectitle {
   display: block;
   font-size: 16px;
