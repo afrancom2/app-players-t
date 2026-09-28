@@ -215,7 +215,7 @@ async function seed() {
 
   await playerRepo.save(
     playerRepo.create({
-      nombreCompleto: 'Thierry Aubert',
+      nombreCompleto: 'Thierry Henry',
       nacionalidad: 'Francia',
       fechaNacimiento: '1985-09-02',
       posicion: Posicion.DELANTERO,
