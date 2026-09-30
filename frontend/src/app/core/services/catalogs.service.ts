@@ -34,7 +34,13 @@ export class CatalogsService {
       this.teamsSignal.set(
         teams.map((team) => ({ ...team, id: String(team.id), ligaId: String(team.ligaId) })),
       );
-      this.titlesSignal.set(titles.map((title) => ({ ...title, id: String(title.id) })));
+      this.titlesSignal.set(
+        titles.map((title) => ({
+          ...title,
+          id: String(title.id),
+          ligaId: title.ligaId != null ? String(title.ligaId) : null,
+        })),
+      );
       this.loaded = true;
     });
 
@@ -43,6 +49,14 @@ export class CatalogsService {
 
   teamsByLeague(ligaId: string): Team[] {
     return this.teamsSignal().filter((team) => team.ligaId === ligaId);
+  }
+
+  titlesByLeague(ligaId: string): Title[] {
+    return this.titlesSignal().filter((title) => title.ligaId === ligaId);
+  }
+
+  titlesByGroup(grupo: string): Title[] {
+    return this.titlesSignal().filter((title) => title.grupo === grupo);
   }
 
   teamName(clubId: string): string {

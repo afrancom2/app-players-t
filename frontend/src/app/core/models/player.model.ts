@@ -10,6 +10,8 @@ export interface ClubRef {
 export interface TituloRef {
   id: string;
   nombre: string;
+  ligaId: string | null;
+  grupo: string | null;
 }
 
 export interface TrayectoriaItem {

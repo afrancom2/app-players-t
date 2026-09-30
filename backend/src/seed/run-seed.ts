@@ -12,6 +12,7 @@ import { Palmares } from '../players/entities/palmares.entity.js';
 import { Player } from '../players/entities/player.entity.js';
 import { Trayectoria } from '../players/entities/trayectoria.entity.js';
 import { User } from '../users/entities/user.entity.js';
+import { LEAGUE_TITLES, TITLE_GROUPS } from './titles-data.js';
 
 export async function runSeed(app: INestApplicationContext): Promise<void> {
   const leagueRepo = app.get<Repository<League>>(getRepositoryToken(League));
@@ -56,9 +57,9 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
     { nombre: 'HNL', pais: 'Croacia', equipos: ['Dinamo Zagreb', 'Hajduk Split', 'Rijeka', 'Osijek', 'Gorica', 'Lokomotiva Zagreb', 'Varaždin', 'Slaven Belupo', 'Istra 1961', 'Vukovar 1991'] },
     { nombre: 'SuperLiga', pais: 'Serbia', equipos: ['Estrella Roja de Belgrado', 'Partizán de Belgrado', 'Vojvodina', 'Železničar Pančevo', 'Novi Pazar', 'OFK Beograd', 'Čukarički', 'Radnik Surdulica', 'IMT Novi Beograd', 'Radnički 1923', 'Javor-Matis', 'TSC Bačka Topola', 'Radnički Niš', 'Mladost Lučani', 'Spartak Subotica', 'Napredak Kruševac'] },
     { nombre: 'Ekstraklasa', pais: 'Polonia', equipos: ['Legia Varsovia', 'Lech Poznan', 'Raków Częstochowa', 'Górnik Zabrze', 'Jagiellonia Białystok', 'GKS Katowice', 'Zagłębie Lubin', 'Wisła Płock', 'Pogoń Szczecin', 'Radomiak Radom', 'Korona Kielce', 'Motor Lublin', 'Cracovia', 'Widzew Łódź', 'Piast Gliwice', 'Lechia Gdańsk', 'Arka Gdynia', 'Bruk-Bet Termalica Nieciecza'] },
-    { nombre: 'Fortuna Liga', pais: 'República Checa', equipos: ['Slavia Praga', 'Sparta Praga', 'Viktoria Plzeň', 'Baník Ostrava', 'Sigma Olomouc', 'Slovácko', 'Bohemians 1905', 'Mladá Boleslav', 'Slovan Liberec', 'Jablonec', 'Hradec Králové', 'Zlín', 'Karviná', 'Teplice', 'Dukla Praga', 'Pardubice'] },
-    { nombre: 'Fortuna Liga', pais: 'Eslovaquia', equipos: ['Slovan Bratislava', 'Spartak Trnava', 'Žilina', 'DAC Dunajská Streda', 'Ružomberok', 'Trenčín', 'Košice', 'Tatran Prešov', 'Podbrezová', 'Zemplín Michalovce', 'Skalica', 'Komárno'] },
-    { nombre: 'Liga I', pais: 'Rumania', equipos: ['FCSB', 'CFR Cluj', 'Universitatea Craiova', 'Rapid Bucarest', 'Dinamo Bucarest', 'Universitatea Cluj', 'Farul Constanța', 'Petrolul Ploiești', 'Oțelul Galați', 'UTA Arad', 'Botoșani', 'Argeș Pitești', 'Hermannstadt', 'Csíkszereda Miercurea Ciuc', 'Unirea Slobozia', 'Metaloglobus Bucarest'] },
+    { nombre: 'Chance Liga', pais: 'República Checa', equipos: ['Slavia Praga', 'Sparta Praga', 'Viktoria Plzeň', 'Baník Ostrava', 'Sigma Olomouc', 'Slovácko', 'Bohemians 1905', 'Mladá Boleslav', 'Slovan Liberec', 'Jablonec', 'Hradec Králové', 'Zlín', 'Karviná', 'Teplice', 'Dukla Praga', 'Pardubice'] },
+    { nombre: 'Niké Liga', pais: 'Eslovaquia', equipos: ['Slovan Bratislava', 'Spartak Trnava', 'Žilina', 'DAC Dunajská Streda', 'Ružomberok', 'Trenčín', 'Košice', 'Tatran Prešov', 'Podbrezová', 'Zemplín Michalovce', 'Skalica', 'Komárno'] },
+    { nombre: 'SuperLiga', pais: 'Rumania', equipos: ['FCSB', 'CFR Cluj', 'Universitatea Craiova', 'Rapid Bucarest', 'Dinamo Bucarest', 'Universitatea Cluj', 'Farul Constanța', 'Petrolul Ploiești', 'Oțelul Galați', 'UTA Arad', 'Botoșani', 'Argeș Pitești', 'Hermannstadt', 'Csíkszereda Miercurea Ciuc', 'Unirea Slobozia', 'Metaloglobus Bucarest'] },
     { nombre: 'Superliga', pais: 'Dinamarca', equipos: ['FC Copenhague', 'Midtjylland', 'Brøndby', 'AGF', 'Nordsjælland', 'OB', 'Randers', 'Silkeborg', 'Viborg', 'Sønderjyske', 'Vejle', 'Fredericia'] },
     { nombre: 'Eliteserien', pais: 'Noruega', equipos: ['Bodø/Glimt', 'Molde', 'Rosenborg', 'Vålerenga', 'Brann', 'Viking', 'Lillestrøm', 'Tromsø', 'Sarpsborg 08', 'Fredrikstad', 'Start', 'Aalesund', 'Sandefjord', 'HamKam', 'Kristiansund', 'KFUM Oslo'] },
     { nombre: 'Allsvenskan', pais: 'Suecia', equipos: ['Malmö FF', 'AIK', 'Hammarby', 'Djurgården', 'IFK Göteborg', 'BK Häcken', 'IF Elfsborg', 'Mjällby AIF', 'GAIS', 'IFK Norrköping', 'Halmstads BK', 'IK Sirius', 'IF Brommapojkarna', 'Degerfors IF', 'Östers IF', 'IFK Värnamo'] },
@@ -93,10 +94,12 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   ];
 
   const teamsByName: Record<string, Team> = {};
+  const leaguesByKey: Record<string, League> = {};
   for (const [index, liga] of leaguesData.entries()) {
     const league = await leagueRepo.save(
       leagueRepo.create({ nombre: liga.nombre, pais: liga.pais, orden: index + 1 }),
     );
+    leaguesByKey[`${liga.pais}|${liga.nombre}`] = league;
     for (const teamName of liga.equipos) {
       teamsByName[teamName] = await teamRepo.save(
         teamRepo.create({ nombre: teamName, ligaId: league.id }),
@@ -105,24 +108,22 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   }
 
   console.log('Creando catálogo de títulos...');
-  const titleNames = [
-    'Mundial',
-    'Serie A',
-    'LaLiga',
-    'Bundesliga',
-    'Ligue 1',
-    'Copa Italia',
-    'Copa del Rey',
-    'Copa Alemana',
-    'Supercopa de Italia',
-    'Supercopa de Francia',
-    'Copa de la UEFA',
-    'Champions League',
-    'Eurocopa',
-  ];
   const titlesByName: Record<string, Title> = {};
-  for (const nombre of titleNames) {
-    titlesByName[nombre] = await titleRepo.save(titleRepo.create({ nombre }));
+  for (const [key, titulos] of Object.entries(LEAGUE_TITLES)) {
+    const league = leaguesByKey[key];
+    if (!league) throw new Error(`Títulos para una liga que no existe en el catálogo: ${key}`);
+    for (const [orden, nombre] of titulos.entries()) {
+      titlesByName[nombre] = await titleRepo.save(
+        titleRepo.create({ nombre, ligaId: league.id, grupo: null, orden }),
+      );
+    }
+  }
+  for (const grupo of TITLE_GROUPS) {
+    for (const [orden, nombre] of grupo.titulos.entries()) {
+      titlesByName[nombre] = await titleRepo.save(
+        titleRepo.create({ nombre, ligaId: null, grupo: grupo.codigo, orden }),
+      );
+    }
   }
 
   console.log('Creando usuarios de prueba...');
@@ -167,7 +168,7 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
       seleccionAnioInicio: 1997,
       seleccionAnioFin: 2018,
       palmares: [
-        palmaresRepo.create({ tituloId: titlesByName['Mundial'].id, cantidad: 1 }),
+        palmaresRepo.create({ tituloId: titlesByName['Copa Mundial de la FIFA'].id, cantidad: 1 }),
         palmaresRepo.create({
           tituloId: titlesByName['Serie A'].id,
           cantidad: 10,
@@ -194,7 +195,7 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
           clubId: teamsByName['Parma'].id,
         }),
         palmaresRepo.create({
-          tituloId: titlesByName['Copa de la UEFA'].id,
+          tituloId: titlesByName['UEFA Europa League'].id,
           cantidad: 1,
           clubId: teamsByName['Juventus'].id,
         }),
@@ -204,7 +205,7 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
           clubId: teamsByName['Paris Saint-Germain'].id,
         }),
         palmaresRepo.create({
-          tituloId: titlesByName['Supercopa de Francia'].id,
+          tituloId: titlesByName['Trofeo de Campeones de Francia'].id,
           cantidad: 1,
           clubId: teamsByName['Paris Saint-Germain'].id,
         }),
@@ -230,7 +231,7 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
           clubId: teamsByName['Bayern Múnich'].id,
         }),
         palmaresRepo.create({
-          tituloId: titlesByName['Copa Alemana'].id,
+          tituloId: titlesByName['Copa de Alemania'].id,
           cantidad: 1,
           clubId: teamsByName['Bayern Múnich'].id,
         }),
@@ -266,7 +267,7 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
 
   await playerRepo.save(
     playerRepo.create({
-      nombreCompleto: 'Thierry Aubert',
+      nombreCompleto: 'Thierry Henry',
       nacionalidad: 'Francia',
       fechaNacimiento: '1985-09-02',
       posicion: Posicion.DELANTERO,

@@ -26,7 +26,7 @@ export class CatalogsService {
   }
 
   findAllTitles() {
-    return this.titleRepo.find({ order: { nombre: 'ASC' } });
+    return this.titleRepo.find({ order: { orden: 'ASC', nombre: 'ASC' } });
   }
 
   async teamIdsForLeague(ligaId: number): Promise<number[]> {

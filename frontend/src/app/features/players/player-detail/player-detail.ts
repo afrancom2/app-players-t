@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { titleLogoPath } from '../../../core/data/title-logos';
 import type { Player } from '../../../core/models/player.model';
 import { PlayersService } from '../../../core/services/players.service';
 import { ConfirmDialogService } from '../../../shared/ui/confirm-dialog/confirm-dialog.service';
@@ -53,6 +54,10 @@ export class PlayerDetail implements OnInit {
     } catch {
       this.toast.error('No se pudo eliminar el jugador.');
     }
+  }
+
+  titleLogo(nombre: string): string | null {
+    return titleLogoPath(nombre);
   }
 
   totalTitulos(player: Player): number {

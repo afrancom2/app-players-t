@@ -147,7 +147,12 @@ export class PlayersService {
     }));
 
     const palmares = player.palmares.map((item) => ({
-      tituloId: { id: item.titulo.id, nombre: item.titulo.nombre },
+      tituloId: {
+        id: item.titulo.id,
+        nombre: item.titulo.nombre,
+        ligaId: item.titulo.ligaId,
+        grupo: item.titulo.grupo,
+      },
       cantidad: item.cantidad,
       clubId: item.club ? { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId } : undefined,
     }));

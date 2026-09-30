@@ -139,7 +139,21 @@
           <div class="grid2">
             <div class="field">
               <label>Selección</label>
-              <input type="text" formControlName="seleccionNombre" />
+              <div class="picker-row">
+                <button type="button" class="nationality-trigger" (click)="openSeleccionPicker()">
+                  @if (form.controls.seleccionNombre.value) {
+                    @if (seleccionCode()) {
+                      <img class="flag" [src]="'flags/' + seleccionCode() + '.svg'" alt="" />
+                    }
+                    <span>{{ form.controls.seleccionNombre.value }}</span>
+                  } @else {
+                    <span class="placeholder">Selecciona una selección…</span>
+                  }
+                </button>
+                @if (form.controls.seleccionNombre.value) {
+                  <button type="button" class="rmbtn" (click)="clearSeleccion()" aria-label="Quitar selección">✕</button>
+                }
+              </div>
             </div>
             <div class="field small">
               <label>Desde</label>
@@ -156,33 +170,106 @@
       @if (step() === 3) {
         <div class="panel">
           <span class="sectitle">Palmarés</span>
-          <span class="secsub">Título elegido desde el catálogo, con cantidad y club opcional</span>
+          <span class="secsub">Elige la liga o competición internacional; el título y el club se filtran automáticamente</span>
 
           @for (row of palmares.controls; track $index) {
-            <div class="rowitem" [formGroup]="row">
+            <div class="rowitem palmares-row" [formGroup]="row">
+              <div class="field">
+                <label>Competición</label>
+                <button type="button" class="league-trigger" (click)="openPalmaresOrigenPicker($index)">
+                  @if (palmaresLeague($index); as liga) {
+                    @if (leagueLogo(liga); as logo) {
+                      <img class="logo" [src]="logo" alt="" />
+                    } @else {
+                      <span class="logo-fallback">{{ liga.nombre.slice(0, 3).toUpperCase() }}</span>
+                    }
+                    <span>{{ liga.nombre }}</span>
+                  } @else if (palmaresGroup($index); as grupo) {
+                    @if (groupLogo(grupo); as logo) {
+                      <img class="logo" [src]="logo" alt="" />
+                    } @else {
+                      <span class="logo-fallback">{{ grupo.nombre.slice(0, 3).toUpperCase() }}</span>
+                    }
+                    <span>{{ grupo.nombre }}</span>
+                  } @else {
+                    <span class="placeholder">Liga o internacional…</span>
+                  }
+                </button>
+              </div>
               <div class="field">
                 <label>Título</label>
-                <select formControlName="tituloId">
-                  <option value="">Selecciona un título</option>
-                  @for (title of catalogs.titles(); track title.id) {
-                    <option [value]="title.id">{{ title.nombre }}</option>
+                <button
+                  type="button"
+                  class="league-trigger"
+                  [disabled]="!palmaresLeague($index) && !palmaresGroup($index)"
+                  (click)="openPalmaresTitlePicker($index)"
+                >
+                  @if (palmaresTitle($index); as title) {
+                    @if (titleLogoFor(title); as logo) {
+                      <img class="logo" [src]="logo" alt="" />
+                    } @else {
+                      <span class="logo-fallback">{{ titleInitialsFor(title) }}</span>
+                    }
+                    <span>{{ title.nombre }}</span>
+                  } @else {
+                    <span class="placeholder">{{
+                      palmaresLeague($index) || palmaresGroup($index) ? 'Selecciona un título…' : 'Elige primero la competición'
+                    }}</span>
                   }
-                </select>
+                </button>
               </div>
               <div class="field small">
                 <label>Cantidad</label>
                 <input type="number" formControlName="cantidad" min="1" />
               </div>
-              <div class="field">
-                <label>Club (opcional)</label>
-                <select formControlName="clubId">
-                  <option value="">—</option>
-                  @for (team of catalogs.teams(); track team.id) {
-                    <option [value]="team.id">{{ team.nombre }}</option>
-                  }
-                </select>
-              </div>
               <button type="button" class="rmbtn" (click)="removePalmares($index)" aria-label="Quitar título">✕</button>
+
+              @if (palmaresTieneClub($index)) {
+                @if (palmaresEsInternacional($index)) {
+                  <div class="field">
+                    <label>Liga del club (opcional)</label>
+                    <button type="button" class="league-trigger" (click)="openPalmaresClubLeaguePicker($index)">
+                      @if (palmaresClubLeague($index); as liga) {
+                        @if (leagueLogo(liga); as logo) {
+                          <img class="logo" [src]="logo" alt="" />
+                        } @else {
+                          <span class="logo-fallback">{{ liga.nombre.slice(0, 3).toUpperCase() }}</span>
+                        }
+                        <span>{{ liga.nombre }}</span>
+                      } @else {
+                        <span class="placeholder">Selecciona una liga…</span>
+                      }
+                    </button>
+                  </div>
+                }
+                <div class="field">
+                  <label>Club (opcional)</label>
+                  <div class="picker-row">
+                    <button
+                      type="button"
+                      class="club-trigger"
+                      [disabled]="!palmaresClubLeague($index)"
+                      (click)="openPalmaresClubPicker($index)"
+                    >
+                      @if (palmaresClub($index); as team) {
+                        @if (teamLogo(palmaresClubLeague($index)!, team); as logo) {
+                          <img class="logo" [src]="logo" alt="" />
+                        } @else {
+                          <span class="logo-fallback">{{ team.nombre.slice(0, 2).toUpperCase() }}</span>
+                        }
+                        <span>{{ team.nombre }}</span>
+                      } @else {
+                        <span class="placeholder">{{
+                          palmaresClubLeague($index) ? 'Selecciona un club…' : 'Elige primero la liga del club'
+                        }}</span>
+                      }
+                    </button>
+                    @if (palmaresClub($index)) {
+                      <button type="button" class="rmbtn" (click)="clearPalmaresClub($index)" aria-label="Quitar club">✕</button>
+                    }
+                  </div>
+                </div>
+              }
             </div>
           }
 
@@ -215,10 +302,51 @@
     />
   }
 
+  @if (showSeleccionPicker()) {
+    <app-nationality-picker
+      title="Selecciona la selección nacional"
+      (closed)="showSeleccionPicker.set(false)"
+      (selected)="onSeleccionSelected($event)"
+    />
+  }
+
   @if (leaguePickerRow() !== null) {
     <app-league-picker
       (closed)="leaguePickerRow.set(null)"
       (selected)="onLeagueSelected($event)"
+    />
+  }
+
+  @if (palmaresOrigenRow() !== null) {
+    <app-league-picker
+      [withGroups]="true"
+      (closed)="palmaresOrigenRow.set(null)"
+      (selected)="onPalmaresLeagueSelected($event)"
+      (groupSelected)="onPalmaresGroupSelected($event)"
+    />
+  }
+
+  @if (palmaresTitleRow() !== null) {
+    <app-title-picker
+      [liga]="palmaresLeague(palmaresTitleRow()!) ?? null"
+      [grupo]="palmaresGroup(palmaresTitleRow()!) ?? null"
+      (closed)="palmaresTitleRow.set(null)"
+      (selected)="onPalmaresTitleSelected($event)"
+    />
+  }
+
+  @if (palmaresClubLeagueRow() !== null) {
+    <app-league-picker
+      (closed)="palmaresClubLeagueRow.set(null)"
+      (selected)="onPalmaresClubLeagueSelected($event)"
+    />
+  }
+
+  @if (palmaresClubRow() !== null) {
+    <app-club-picker
+      [liga]="palmaresClubLeague(palmaresClubRow()!)!"
+      (closed)="palmaresClubRow.set(null)"
+      (selected)="onPalmaresClubSelected($event)"
     />
   }
 

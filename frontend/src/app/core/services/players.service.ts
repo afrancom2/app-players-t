@@ -73,5 +73,9 @@ function normalizeClub(club: ClubRef): ClubRef {
 }
 
 function normalizeTitulo(titulo: TituloRef): TituloRef {
-  return { ...titulo, id: String(titulo.id) };
+  return {
+    ...titulo,
+    id: String(titulo.id),
+    ligaId: titulo.ligaId != null ? String(titulo.ligaId) : null,
+  };
 }

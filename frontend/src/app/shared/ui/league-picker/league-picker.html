@@ -1,20 +1,40 @@
 <div class="backdrop" (click)="close()">
-  <div class="dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Selecciona la liga">
+  <div class="dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-label]="withGroups() ? 'Selecciona la competición' : 'Selecciona la liga'">
     <div class="dhead">
-      <h3>Selecciona la liga</h3>
+      <h3>{{ withGroups() ? 'Selecciona la competición' : 'Selecciona la liga' }}</h3>
       <button type="button" class="iconbtn" (click)="close()" aria-label="Cerrar">✕</button>
     </div>
 
     <input
       type="text"
       class="search mono"
-      placeholder="Buscar liga o país…"
+      [placeholder]="withGroups() ? 'Buscar liga, país u organizador…' : 'Buscar liga o país…'"
       [value]="search()"
       (input)="onSearchInput($event)"
       autofocus
     />
 
     <div class="list">
+      @if (groupResults().length > 0) {
+        <span class="section mono">Internacionales y selecciones</span>
+        @for (grupo of groupResults(); track grupo.codigo) {
+          <button type="button" class="option" (click)="chooseGroup(grupo)">
+            @if (groupLogoFor(grupo); as logo) {
+              <img class="logo" [src]="logo" alt="" />
+            } @else {
+              <span class="logo-fallback">{{ grupo.nombre.slice(0, 3).toUpperCase() }}</span>
+            }
+            <span class="names">
+              <span class="name">{{ grupo.nombre }}</span>
+              <span class="country mono">{{ grupo.descripcion }}</span>
+            </span>
+          </button>
+        }
+        @if (results().length > 0) {
+          <span class="section mono">Ligas nacionales</span>
+        }
+      }
+
       @for (liga of results(); track liga.id) {
         <button type="button" class="option" (click)="choose(liga)">
           @if (logoFor(liga); as logo) {
@@ -28,7 +48,9 @@
           </span>
         </button>
       } @empty {
-        <div class="empty">Sin resultados para "{{ search() }}".</div>
+        @if (groupResults().length === 0) {
+          <div class="empty">Sin resultados para "{{ search() }}".</div>
+        }
       }
     </div>
   </div>

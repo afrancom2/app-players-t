@@ -1,0 +1,33 @@
+<div class="backdrop" (click)="close()">
+  <div class="dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Selecciona el título">
+    <div class="dhead">
+      <h3>Selecciona el título</h3>
+      <button type="button" class="iconbtn" (click)="close()" aria-label="Cerrar">✕</button>
+    </div>
+    <span class="league-context mono">{{ context() }}</span>
+
+    <input
+      type="text"
+      class="search mono"
+      placeholder="Buscar título…"
+      [value]="search()"
+      (input)="onSearchInput($event)"
+      autofocus
+    />
+
+    <div class="list">
+      @for (title of results(); track title.id) {
+        <button type="button" class="option" (click)="choose(title)">
+          @if (logoFor(title); as logo) {
+            <img class="logo" [src]="logo" alt="" />
+          } @else {
+            <span class="logo-fallback">{{ initialsFor(title) }}</span>
+          }
+          <span class="name">{{ title.nombre }}</span>
+        </button>
+      } @empty {
+        <div class="empty">Sin resultados para "{{ search() }}".</div>
+      }
+    </div>
+  </div>
+</div>

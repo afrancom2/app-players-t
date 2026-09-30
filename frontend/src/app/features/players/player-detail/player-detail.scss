@@ -198,6 +198,16 @@
   color: var(--gold);
   flex-shrink: 0;
 }
+.medal .tlogo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
 .mn {
   font-weight: 700;
   font-size: 14px;
