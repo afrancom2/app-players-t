@@ -1,3 +1,7 @@
+# Orden de arranque con `docker compose up -d`:
+#   1. postgres  -> espera a que acepte conexiones (healthcheck pg_isready)
+#   2. backend   -> arranca solo con postgres "healthy"; queda "healthy" cuando responde HTTP
+#   3. frontend  -> arranca solo con backend "healthy"
 services:
   postgres:
     image: postgres:16-alpine
