@@ -18,6 +18,15 @@ Abrir página de jugadores
 localhost:4200
 ```
 
+# Ejecutar cuando hayan cambios en el codigo
+Desde la ventana de CMD ejecutar los siguientes comandos en orden: 
+```bash
+git pull
+```
+```bash
+git fetch
+```
+
 # Administración de Jugadores
 
 Módulo de administración de jugadores de fútbol: backend en NestJS + PostgreSQL (TypeORM), frontend en Angular con el diseño visual "Cromo" (tarjetas fotográficas, ficha de detalle con línea de tiempo de clubes y medallas de palmarés).
