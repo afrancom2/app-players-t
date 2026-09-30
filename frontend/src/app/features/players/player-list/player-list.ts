@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
 import type { League, Team } from '../../../core/models/catalog.model';
 import type { Estado, Player, Posicion } from '../../../core/models/player.model';
 import { POSICIONES } from '../../../core/models/player.model';
@@ -25,6 +26,8 @@ export class PlayerList implements OnInit {
 
   protected readonly posiciones = POSICIONES;
   protected readonly players = signal<Player[]>([]);
+  protected readonly nacionalidades = FIFA_NATIONALITIES;
+  protected readonly showFilters = signal(false);
   protected readonly total = signal(0);
   protected readonly loading = signal(true);
   protected readonly page = signal(1);
@@ -33,11 +36,23 @@ export class PlayerList implements OnInit {
   protected search = '';
   protected posicion: Posicion | '' = '';
   protected estado: Estado | '' = '';
+  protected nacionalidad = '';
   protected ligaId = '';
   protected equipoId = '';
 
   protected get teamsForSelectedLeague(): Team[] {
     return this.ligaId ? this.catalogs.teamsByLeague(this.ligaId) : [];
+  }
+
+  /** Filtros aplicados, para mostrarlo en el botón cuando el panel está cerrado. */
+  protected get activeFilterCount(): number {
+    return [this.search, this.nacionalidad, this.ligaId, this.equipoId, this.posicion, this.estado].filter(
+      Boolean,
+    ).length;
+  }
+
+  toggleFilters(): void {
+    this.showFilters.update((open) => !open);
   }
 
   protected get totalPages(): number {
@@ -56,6 +71,7 @@ export class PlayerList implements OnInit {
         search: this.search || undefined,
         posicion: this.posicion || undefined,
         estado: this.estado || undefined,
+        nacionalidad: this.nacionalidad || undefined,
         liga: this.ligaId || undefined,
         equipo: this.equipoId || undefined,
         page: this.page(),
@@ -82,6 +98,7 @@ export class PlayerList implements OnInit {
     this.search = '';
     this.posicion = '';
     this.estado = '';
+    this.nacionalidad = '';
     this.ligaId = '';
     this.equipoId = '';
     this.applyFilters();

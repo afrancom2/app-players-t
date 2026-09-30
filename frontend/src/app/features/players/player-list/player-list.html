@@ -4,54 +4,79 @@
       <span class="eyebrow">Jugadores</span>
       <h1>{{ total() }} fichados</h1>
     </div>
-    @if (auth.isAdmin()) {
-      <a class="btn btn-gold" routerLink="/jugadores/nuevo">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        Nueva ficha
-      </a>
-    }
-  </div>
-
-  <div class="filters">
-    <div class="searchbox">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input
-        type="search"
-        placeholder="Buscar por nombre"
-        [(ngModel)]="search"
-        (keyup.enter)="applyFilters()"
-      />
+    <div class="actions">
+      <button
+        type="button"
+        class="btn btn-secondary filters-toggle"
+        [class.on]="showFilters()"
+        (click)="toggleFilters()"
+        [attr.aria-expanded]="showFilters()"
+        aria-controls="filtros"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8.5V19l-4 2v-7.5L3 5Z"></path></svg>
+        Filtros
+        @if (activeFilterCount > 0) {
+          <span class="fcount" [attr.aria-label]="activeFilterCount + ' filtros activos'">{{ activeFilterCount }}</span>
+        }
+      </button>
+      @if (auth.isAdmin()) {
+        <a class="btn btn-gold" routerLink="/jugadores/nuevo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Nueva ficha
+        </a>
+      }
     </div>
-
-    <select [(ngModel)]="ligaId" (ngModelChange)="onLeagueChange()">
-      <option value="">Liga: todas</option>
-      @for (liga of catalogs.leagues(); track liga.id) {
-        <option [value]="liga.id">{{ leagueName(liga) }}</option>
-      }
-    </select>
-
-    <select [(ngModel)]="equipoId" (ngModelChange)="applyFilters()" [disabled]="!ligaId">
-      <option value="">Equipo: todos</option>
-      @for (team of teamsForSelectedLeague; track team.id) {
-        <option [value]="team.id">{{ team.nombre }}</option>
-      }
-    </select>
-
-    <select [(ngModel)]="posicion" (ngModelChange)="applyFilters()">
-      <option value="">Posición: todas</option>
-      @for (pos of posiciones; track pos) {
-        <option [value]="pos">{{ pos }}</option>
-      }
-    </select>
-
-    <select [(ngModel)]="estado" (ngModelChange)="applyFilters()">
-      <option value="">Estado: todos</option>
-      <option value="activo">Activo</option>
-      <option value="retirado">Retirado</option>
-    </select>
-
-    <button class="btn btn-secondary" (click)="clearFilters()">Limpiar</button>
   </div>
+
+  @if (showFilters()) {
+    <div class="filters" id="filtros">
+      <div class="searchbox">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input
+          type="search"
+          placeholder="Buscar por nombre"
+          [(ngModel)]="search"
+          (keyup.enter)="applyFilters()"
+        />
+      </div>
+
+      <select [(ngModel)]="nacionalidad" (ngModelChange)="applyFilters()">
+        <option value="">País: todos</option>
+        @for (pais of nacionalidades; track pais.name) {
+          <option [value]="pais.name">{{ pais.name }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="ligaId" (ngModelChange)="onLeagueChange()">
+        <option value="">Liga: todas</option>
+        @for (liga of catalogs.leagues(); track liga.id) {
+          <option [value]="liga.id">{{ leagueName(liga) }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="equipoId" (ngModelChange)="applyFilters()" [disabled]="!ligaId">
+        <option value="">Equipo: todos</option>
+        @for (team of teamsForSelectedLeague; track team.id) {
+          <option [value]="team.id">{{ team.nombre }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="posicion" (ngModelChange)="applyFilters()">
+        <option value="">Posición: todas</option>
+        @for (pos of posiciones; track pos) {
+          <option [value]="pos">{{ pos }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="estado" (ngModelChange)="applyFilters()">
+        <option value="">Estado: todos</option>
+        <option value="activo">Activo</option>
+        <option value="retirado">Retirado</option>
+      </select>
+
+      <button class="btn btn-secondary" (click)="clearFilters()">Limpiar</button>
+    </div>
+  }
 
   @if (loading()) {
     <div class="grid">
@@ -63,15 +88,15 @@
     <div class="empty-state">
       <h2>Álbum vacío</h2>
       <p>
-        @if (search || posicion || estado || ligaId) {
+        @if (search || posicion || estado || nacionalidad || ligaId) {
           Sin resultados para estos filtros.
         } @else {
           Aún no hay jugadores registrados.
         }
       </p>
-      @if (auth.isAdmin() && !(search || posicion || estado || ligaId)) {
+      @if (auth.isAdmin() && !(search || posicion || estado || nacionalidad || ligaId)) {
         <a class="btn btn-gold" routerLink="/jugadores/nuevo">Crear el primer jugador</a>
-      } @else if (search || posicion || estado || ligaId) {
+      } @else if (search || posicion || estado || nacionalidad || ligaId) {
         <button class="btn btn-secondary" (click)="clearFilters()">Limpiar filtros</button>
       }
     </div>

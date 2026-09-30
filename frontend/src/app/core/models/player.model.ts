@@ -61,6 +61,7 @@ export interface PlayerQuery {
   search?: string;
   posicion?: Posicion;
   estado?: Estado;
+  nacionalidad?: string;
   liga?: string;
   equipo?: string;
   page?: number;

@@ -32,6 +32,7 @@ export class PlayersService {
     const where: FindOptionsWhere<Player> = {};
     if (query.posicion) where.posicion = query.posicion;
     if (query.estado) where.estado = query.estado;
+    if (query.nacionalidad) where.nacionalidad = query.nacionalidad;
     if (query.search) where.nombreCompleto = ILike(`%${query.search}%`);
 
     let teamIds: number[] | null = null;

@@ -17,6 +17,10 @@ export class QueryPlayerDto {
   estado?: Estado;
 
   @IsOptional()
+  @IsString()
+  nacionalidad?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   liga?: number;
