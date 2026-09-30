@@ -195,6 +195,8 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
       nacionalidad: 'Alemania',
       fechaNacimiento: '1990-01-04',
       posicion: Posicion.MEDIOCAMPISTA,
+      fotoUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSG_rUWRhE83XrP8_UPr4SIa0Y2GVmj8IE_u4A-1-iF3OcLGyEHjG65R5s&s=10',
       biografia:
         'Toni Kroos es un exfutbolista alemán nacido en 1990 en Greifswald. Formado en el Bayern Múnich, jugó cedido en el Bayer Leverkusen y en 2014 fichó por el Real Madrid, donde fue pieza fija del mediocampo durante diez temporadas. Ganó seis Champions League y el Mundial de 2014 con Alemania, y se retiró en 2024 tras la Eurocopa disputada en su país.',
       trayectoria: [
@@ -232,6 +234,8 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
       nacionalidad: 'España',
       fechaNacimiento: '1986-03-30',
       posicion: Posicion.DEFENSA,
+      fotoUrl:
+        'https://www.tudn.com/_next/image?url=https%3A%2F%2Fst1.uvnimg.com%2F56%2F07%2F52b41e294a94bb2892d8b66af2df%2Fgettyimages-691957402.jpg&w=1280&q=75',
       biografia:
         'Sergio Ramos es un futbolista español nacido en 1986 en Camas (Sevilla). Tras debutar en el Sevilla, jugó dieciséis temporadas en el Real Madrid, del que fue capitán, y después pasó por el Paris Saint-Germain, regresó al Sevilla y jugó en el Monterrey. Es el jugador con más partidos en la historia de la selección española, con la que ganó el Mundial de 2010 y las Eurocopas de 2008 y 2012. Desde enero de 2026 es agente libre.',
       trayectoria: [
