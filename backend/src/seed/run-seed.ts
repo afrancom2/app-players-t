@@ -145,6 +145,16 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   ]);
 
   console.log('Creando jugadores de ejemplo...');
+  // Datos reales verificados en Wikipedia (sección Honours e infobox) a septiembre de 2026.
+  const periodo = (club: string, anioInicio: number, anioFin?: number) =>
+    trayectoriaRepo.create({ clubId: teamsByName[club].id, anioInicio, anioFin });
+  const titulo = (nombre: string, cantidad: number, club?: string) =>
+    palmaresRepo.create({
+      tituloId: titlesByName[nombre].id,
+      cantidad,
+      clubId: club ? teamsByName[club].id : undefined,
+    });
+
   await playerRepo.save(
     playerRepo.create({
       nombreCompleto: 'Gianluigi Buffon',
@@ -154,61 +164,25 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
       biografia:
         'Gianluigi Buffon es un exfutbolista italiano nacido en 1978. Debutó muy joven en el Parma, brilló durante muchos años en la Juventus y fue clave para que Italia ganara el Mundial de 2006. Es considerado uno de los mejores porteros de la historia y se retiró en 2023.',
       trayectoria: [
-        trayectoriaRepo.create({ clubId: teamsByName['Parma'].id, anioInicio: 1995, anioFin: 2001 }),
-        trayectoriaRepo.create({ clubId: teamsByName['Juventus'].id, anioInicio: 2001, anioFin: 2018 }),
-        trayectoriaRepo.create({
-          clubId: teamsByName['Paris Saint-Germain'].id,
-          anioInicio: 2018,
-          anioFin: 2019,
-        }),
-        trayectoriaRepo.create({ clubId: teamsByName['Juventus'].id, anioInicio: 2019, anioFin: 2021 }),
-        trayectoriaRepo.create({ clubId: teamsByName['Parma'].id, anioInicio: 2021, anioFin: 2023 }),
+        periodo('Parma', 1995, 2001),
+        periodo('Juventus', 2001, 2018),
+        periodo('Paris Saint-Germain', 2018, 2019),
+        periodo('Juventus', 2019, 2021),
+        periodo('Parma', 2021, 2023),
       ],
       seleccionNombre: 'Italia',
       seleccionAnioInicio: 1997,
       seleccionAnioFin: 2018,
       palmares: [
-        palmaresRepo.create({ tituloId: titlesByName['Copa Mundial de la FIFA'].id, cantidad: 1 }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Serie A'].id,
-          cantidad: 10,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa Italia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa Italia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Parma'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Supercopa de Italia'].id,
-          cantidad: 6,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Supercopa de Italia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Parma'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['UEFA Europa League'].id,
-          cantidad: 1,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Ligue 1'].id,
-          cantidad: 1,
-          clubId: teamsByName['Paris Saint-Germain'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Trofeo de Campeones de Francia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Paris Saint-Germain'].id,
-        }),
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Serie A', 10, 'Juventus'),
+        titulo('Copa Italia', 5, 'Juventus'),
+        titulo('Supercopa de Italia', 6, 'Juventus'),
+        titulo('Copa Italia', 1, 'Parma'),
+        titulo('Supercopa de Italia', 1, 'Parma'),
+        titulo('UEFA Europa League', 1, 'Parma'),
+        titulo('Ligue 1', 1, 'Paris Saint-Germain'),
+        titulo('Trofeo de Campeones de Francia', 1, 'Paris Saint-Germain'),
       ],
       estado: Estado.RETIRADO,
       anioRetiro: 2023,
@@ -217,49 +191,70 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
 
   await playerRepo.save(
     playerRepo.create({
-      nombreCompleto: 'Matthias Kessler',
+      nombreCompleto: 'Toni Kroos',
       nacionalidad: 'Alemania',
-      fechaNacimiento: '1995-03-12',
-      posicion: Posicion.PORTERO,
-      trayectoria: [trayectoriaRepo.create({ clubId: teamsByName['Bayern Múnich'].id, anioInicio: 2019 })],
-      seleccionNombre: 'Alemania',
-      seleccionAnioInicio: 2018,
-      palmares: [
-        palmaresRepo.create({
-          tituloId: titlesByName['Bundesliga'].id,
-          cantidad: 4,
-          clubId: teamsByName['Bayern Múnich'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa de Alemania'].id,
-          cantidad: 1,
-          clubId: teamsByName['Bayern Múnich'].id,
-        }),
+      fechaNacimiento: '1990-01-04',
+      posicion: Posicion.MEDIOCAMPISTA,
+      biografia:
+        'Toni Kroos es un exfutbolista alemán nacido en 1990 en Greifswald. Formado en el Bayern Múnich, jugó cedido en el Bayer Leverkusen y en 2014 fichó por el Real Madrid, donde fue pieza fija del mediocampo durante diez temporadas. Ganó seis Champions League y el Mundial de 2014 con Alemania, y se retiró en 2024 tras la Eurocopa disputada en su país.',
+      trayectoria: [
+        periodo('Bayern Múnich', 2007, 2009),
+        periodo('Bayer Leverkusen', 2009, 2010),
+        periodo('Bayern Múnich', 2010, 2014),
+        periodo('Real Madrid', 2014, 2024),
       ],
-      estado: Estado.ACTIVO,
+      seleccionNombre: 'Alemania',
+      seleccionAnioInicio: 2010,
+      seleccionAnioFin: 2024,
+      palmares: [
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Bundesliga', 3, 'Bayern Múnich'),
+        titulo('Copa de Alemania', 3, 'Bayern Múnich'),
+        titulo('Supercopa de Alemania', 1, 'Bayern Múnich'),
+        titulo('UEFA Champions League', 1, 'Bayern Múnich'),
+        titulo('Supercopa de la UEFA', 1, 'Bayern Múnich'),
+        titulo('Mundial de Clubes de la FIFA', 1, 'Bayern Múnich'),
+        titulo('LaLiga', 4, 'Real Madrid'),
+        titulo('Copa del Rey', 1, 'Real Madrid'),
+        titulo('Supercopa de España', 4, 'Real Madrid'),
+        titulo('UEFA Champions League', 5, 'Real Madrid'),
+        titulo('Supercopa de la UEFA', 3, 'Real Madrid'),
+        titulo('Mundial de Clubes de la FIFA', 5, 'Real Madrid'),
+      ],
+      estado: Estado.RETIRADO,
+      anioRetiro: 2024,
     }),
   );
 
   await playerRepo.save(
     playerRepo.create({
-      nombreCompleto: 'Álvaro Duarte',
+      nombreCompleto: 'Sergio Ramos',
       nacionalidad: 'España',
-      fechaNacimiento: '1997-06-20',
+      fechaNacimiento: '1986-03-30',
       posicion: Posicion.DEFENSA,
-      trayectoria: [trayectoriaRepo.create({ clubId: teamsByName['Villarreal'].id, anioInicio: 2020 })],
+      biografia:
+        'Sergio Ramos es un futbolista español nacido en 1986 en Camas (Sevilla). Tras debutar en el Sevilla, jugó dieciséis temporadas en el Real Madrid, del que fue capitán, y después pasó por el Paris Saint-Germain, regresó al Sevilla y jugó en el Monterrey. Es el jugador con más partidos en la historia de la selección española, con la que ganó el Mundial de 2010 y las Eurocopas de 2008 y 2012. Desde enero de 2026 es agente libre.',
+      trayectoria: [
+        periodo('Sevilla', 2004, 2005),
+        periodo('Real Madrid', 2005, 2021),
+        periodo('Paris Saint-Germain', 2021, 2023),
+        periodo('Sevilla', 2023, 2024),
+        periodo('Monterrey', 2025, 2025),
+      ],
       seleccionNombre: 'España',
-      seleccionAnioInicio: 2021,
+      seleccionAnioInicio: 2005,
+      seleccionAnioFin: 2021,
       palmares: [
-        palmaresRepo.create({
-          tituloId: titlesByName['LaLiga'].id,
-          cantidad: 1,
-          clubId: teamsByName['Villarreal'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa del Rey'].id,
-          cantidad: 1,
-          clubId: teamsByName['Villarreal'].id,
-        }),
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Eurocopa', 2),
+        titulo('LaLiga', 5, 'Real Madrid'),
+        titulo('Copa del Rey', 2, 'Real Madrid'),
+        titulo('Supercopa de España', 4, 'Real Madrid'),
+        titulo('UEFA Champions League', 4, 'Real Madrid'),
+        titulo('Supercopa de la UEFA', 3, 'Real Madrid'),
+        titulo('Mundial de Clubes de la FIFA', 4, 'Real Madrid'),
+        titulo('Ligue 1', 2, 'Paris Saint-Germain'),
+        titulo('Trofeo de Campeones de Francia', 1, 'Paris Saint-Germain'),
       ],
       estado: Estado.ACTIVO,
     }),
@@ -269,20 +264,39 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
     playerRepo.create({
       nombreCompleto: 'Thierry Henry',
       nacionalidad: 'Francia',
-      fechaNacimiento: '1985-09-02',
+      fechaNacimiento: '1977-08-17',
       posicion: Posicion.DELANTERO,
+      biografia:
+        'Thierry Henry es un exfutbolista francés nacido en 1977 en Les Ulis. Debutó en el Mónaco, pasó brevemente por la Juventus y se convirtió en leyenda del Arsenal, del que es el máximo goleador histórico. Después ganó el triplete con el Barcelona en 2009 y cerró su carrera en los New York Red Bulls, con una breve cesión al Arsenal en 2012. Con Francia fue campeón del Mundial de 1998 y de la Eurocopa 2000, y se retiró en 2014.',
       trayectoria: [
-        trayectoriaRepo.create({ clubId: teamsByName['Lyon'].id, anioInicio: 2008, anioFin: 2015 }),
+        periodo('Mónaco', 1994, 1999),
+        periodo('Juventus', 1999, 1999),
+        periodo('Arsenal', 1999, 2007),
+        periodo('Barcelona', 2007, 2010),
+        periodo('New York Red Bulls', 2010, 2014),
+        periodo('Arsenal', 2012, 2012),
       ],
+      seleccionNombre: 'Francia',
+      seleccionAnioInicio: 1997,
+      seleccionAnioFin: 2010,
       palmares: [
-        palmaresRepo.create({
-          tituloId: titlesByName['Ligue 1'].id,
-          cantidad: 1,
-          clubId: teamsByName['Lyon'].id,
-        }),
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Eurocopa', 1),
+        titulo('Copa Confederaciones de la FIFA', 1),
+        titulo('Ligue 1', 1, 'Mónaco'),
+        titulo('Premier League', 2, 'Arsenal'),
+        titulo('FA Cup', 2, 'Arsenal'),
+        titulo('FA Community Shield', 2, 'Arsenal'),
+        titulo('LaLiga', 2, 'Barcelona'),
+        titulo('Copa del Rey', 1, 'Barcelona'),
+        titulo('Supercopa de España', 1, 'Barcelona'),
+        titulo('UEFA Champions League', 1, 'Barcelona'),
+        titulo('Supercopa de la UEFA', 1, 'Barcelona'),
+        titulo('Mundial de Clubes de la FIFA', 1, 'Barcelona'),
+        titulo("MLS Supporters' Shield", 1, 'New York Red Bulls'),
       ],
       estado: Estado.RETIRADO,
-      anioRetiro: 2015,
+      anioRetiro: 2014,
     }),
   );
 

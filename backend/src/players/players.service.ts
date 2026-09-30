@@ -140,7 +140,13 @@ export class PlayersService {
   }
 
   private toResponse(player: Player) {
-    const trayectoria = player.trayectoria.map((item) => ({
+    // Postgres no garantiza el orden de las filas de una relación; se ordena
+    // cronológicamente (y el periodo abierto, sin anioFin, al final si empatan).
+    const ordenada = [...player.trayectoria].sort(
+      (a, b) =>
+        a.anioInicio - b.anioInicio || (a.anioFin ?? Infinity) - (b.anioFin ?? Infinity),
+    );
+    const trayectoria = ordenada.map((item) => ({
       clubId: { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId },
       anioInicio: item.anioInicio,
       anioFin: item.anioFin,
@@ -157,7 +163,8 @@ export class PlayersService {
       clubId: item.club ? { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId } : undefined,
     }));
 
-    const clubActualItem = getClubActual(trayectoria);
+    // Un jugador retirado no tiene club actual aunque algún periodo quedara sin anioFin.
+    const clubActualItem = player.estado === Estado.RETIRADO ? null : getClubActual(trayectoria);
 
     return {
       id: player.id,

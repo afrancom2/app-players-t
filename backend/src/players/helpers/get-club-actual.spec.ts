@@ -23,12 +23,12 @@ describe('getClubActual', () => {
     expect(getClubActual(trayectoria)?.clubId).toBe('juventus');
   });
 
-  it('falls back to the most recent anioInicio when every entry has anioFin', () => {
+  it('returns null when every entry has anioFin (no current club)', () => {
     const trayectoria = [
       { clubId: 'parma', anioInicio: 1995, anioFin: 2001 },
       { clubId: 'juventus', anioInicio: 2001, anioFin: 2018 },
       { clubId: 'psg', anioInicio: 2018, anioFin: 2019 },
     ];
-    expect(getClubActual(trayectoria)?.clubId).toBe('psg');
+    expect(getClubActual(trayectoria)).toBeNull();
   });
 });

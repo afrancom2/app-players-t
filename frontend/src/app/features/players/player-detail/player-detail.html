@@ -45,7 +45,11 @@
           @for (item of p.trayectoria; track $index) {
             <div class="tnode">
               <span class="tline"></span>
-              <span class="tdot">{{ item.clubId.nombre.slice(0, 3).toUpperCase() }}</span>
+              @if (crestFor(item.clubId); as crest) {
+                <span class="tdot crest"><img [src]="crest" alt="" /></span>
+              } @else {
+                <span class="tdot">{{ item.clubId.nombre.slice(0, 3).toUpperCase() }}</span>
+              }
               <span class="tclub">{{ item.clubId.nombre }}</span>
               <span class="tyears mono">{{ item.anioInicio }}–{{ item.anioFin ?? 'act.' }}</span>
             </div>

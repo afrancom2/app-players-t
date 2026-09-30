@@ -85,7 +85,9 @@
             <span class="cname">{{ player.nombreCompleto }}</span>
           </div>
           <div class="cfoot">
-            <span class="clubchip">{{ player.clubActual?.nombre ?? 'Sin club' }}</span>
+            <span class="clubchip">{{
+              player.clubActual?.nombre ?? (player.estado === 'retirado' ? '' : 'Sin club')
+            }}</span>
             <app-status-chip [estado]="player.estado" />
           </div>
         </button>
