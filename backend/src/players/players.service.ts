@@ -83,13 +83,13 @@ export class PlayersService {
       nacionalidad: dto.nacionalidad,
       fechaNacimiento: dto.fechaNacimiento,
       posicion: dto.posicion,
-      fotoUrl: dto.fotoUrl,
-      biografia: dto.biografia,
+      fotoUrl: dto.fotoUrl ?? null,
+      biografia: dto.biografia ?? null,
       estado: dto.estado,
-      anioRetiro: dto.estado === Estado.RETIRADO ? dto.anioRetiro : undefined,
-      seleccionNombre: dto.seleccion?.nombre,
-      seleccionAnioInicio: dto.seleccion?.anioInicio,
-      seleccionAnioFin: dto.seleccion?.anioFin,
+      anioRetiro: dto.estado === Estado.RETIRADO ? (dto.anioRetiro ?? null) : null,
+      seleccionNombre: dto.seleccion?.nombre ?? null,
+      seleccionAnioInicio: dto.seleccion?.anioInicio ?? null,
+      seleccionAnioFin: dto.seleccion?.anioFin ?? null,
       trayectoria: dto.trayectoria.map((item) => this.trayectoriaRepo.create(item)),
       palmares: dto.palmares.map((item) => this.palmaresRepo.create(item)),
     });
@@ -108,16 +108,18 @@ export class PlayersService {
     if (dto.nacionalidad !== undefined) player.nacionalidad = dto.nacionalidad;
     if (dto.fechaNacimiento !== undefined) player.fechaNacimiento = dto.fechaNacimiento;
     if (dto.posicion !== undefined) player.posicion = dto.posicion;
+    // Campo ausente (undefined) = no se toca; null = se vacía. TypeORM ignora
+    // undefined al guardar, por eso para vaciar se asigna null explícitamente.
     if (dto.fotoUrl !== undefined) player.fotoUrl = dto.fotoUrl;
     if (dto.biografia !== undefined) player.biografia = dto.biografia;
     if (dto.estado !== undefined) player.estado = dto.estado;
     if (dto.anioRetiro !== undefined) player.anioRetiro = dto.anioRetiro;
-    if (player.estado !== Estado.RETIRADO) player.anioRetiro = undefined;
+    if (player.estado !== Estado.RETIRADO) player.anioRetiro = null;
 
     if (dto.seleccion !== undefined) {
-      player.seleccionNombre = dto.seleccion?.nombre;
-      player.seleccionAnioInicio = dto.seleccion?.anioInicio;
-      player.seleccionAnioFin = dto.seleccion?.anioFin;
+      player.seleccionNombre = dto.seleccion?.nombre ?? null;
+      player.seleccionAnioInicio = dto.seleccion?.anioInicio ?? null;
+      player.seleccionAnioFin = dto.seleccion?.anioFin ?? null;
     }
 
     if (dto.trayectoria !== undefined) {
@@ -173,19 +175,19 @@ export class PlayersService {
       nacionalidad: player.nacionalidad,
       fechaNacimiento: player.fechaNacimiento,
       posicion: player.posicion,
-      fotoUrl: player.fotoUrl,
-      biografia: player.biografia,
+      fotoUrl: player.fotoUrl ?? undefined,
+      biografia: player.biografia ?? undefined,
       trayectoria,
       seleccion: player.seleccionNombre
         ? {
             nombre: player.seleccionNombre,
             anioInicio: player.seleccionAnioInicio!,
-            anioFin: player.seleccionAnioFin,
+            anioFin: player.seleccionAnioFin ?? undefined,
           }
         : undefined,
       palmares,
       estado: player.estado,
-      anioRetiro: player.anioRetiro,
+      anioRetiro: player.anioRetiro ?? undefined,
       clubActual: clubActualItem ? clubActualItem.clubId : null,
       createdAt: player.createdAt,
       updatedAt: player.updatedAt,

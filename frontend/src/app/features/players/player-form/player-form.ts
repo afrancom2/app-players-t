@@ -394,17 +394,18 @@ export class PlayerForm implements OnInit {
       nacionalidad: value.nacionalidad,
       fechaNacimiento: value.fechaNacimiento,
       posicion: value.posicion,
-      fotoUrl: value.fotoUrl || undefined,
-      biografia: value.biografia || undefined,
+      // null (no undefined) para que un campo vaciado se borre al editar.
+      fotoUrl: value.fotoUrl.trim() || null,
+      biografia: value.biografia.trim() || null,
       estado: value.estado,
-      anioRetiro: value.estado === 'retirado' ? (value.anioRetiro ?? undefined) : undefined,
+      anioRetiro: value.estado === 'retirado' ? (value.anioRetiro ?? null) : null,
       seleccion: value.seleccionNombre
         ? {
             nombre: value.seleccionNombre,
             anioInicio: value.seleccionInicio!,
-            anioFin: value.seleccionFin ?? undefined,
+            anioFin: value.seleccionFin ?? null,
           }
-        : undefined,
+        : null,
       trayectoria: value.trayectoria.map((item) => ({
         clubId: item['clubId'],
         anioInicio: item['anioInicio']!,
