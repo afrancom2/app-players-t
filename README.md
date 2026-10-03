@@ -1,3 +1,32 @@
+# EJECUTAR THOMAS
+
+- Abrir programa Docker Desktop en el escritorio (Ballena azul)
+- Esperar que el programa cargue
+- Abrir carpeta en el escritorio app-players-t
+- En la barra de navegación borrar la url y escribir el siguiente comando:
+```bash
+cmd
+```
+dar enter
+- despues ejecutar el siguiente comando en la ventana negra
+```bash
+docker compose up -d --build
+```
+dar enter
+Abrir página de jugadores
+```bash
+localhost:4200
+```
+
+# Ejecutar cuando hayan cambios en el codigo
+Desde la ventana de CMD ejecutar los siguientes comandos en orden: 
+```bash
+git pull
+```
+```bash
+git fetch
+```
+
 # Administración de Jugadores
 
 Módulo de administración de jugadores de fútbol: backend en NestJS + PostgreSQL (TypeORM), frontend en Angular con el diseño visual "Cromo" (tarjetas fotográficas, ficha de detalle con línea de tiempo de clubes y medallas de palmarés).

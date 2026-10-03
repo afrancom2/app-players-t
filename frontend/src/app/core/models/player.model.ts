@@ -10,6 +10,8 @@ export interface ClubRef {
 export interface TituloRef {
   id: string;
   nombre: string;
+  ligaId: string | null;
+  grupo: string | null;
 }
 
 export interface TrayectoriaItem {
@@ -59,6 +61,7 @@ export interface PlayerQuery {
   search?: string;
   posicion?: Posicion;
   estado?: Estado;
+  nacionalidad?: string;
   liga?: string;
   equipo?: string;
   page?: number;
@@ -83,13 +86,21 @@ export interface PlayerInput {
   nacionalidad: string;
   fechaNacimiento: string;
   posicion: Posicion;
-  fotoUrl?: string;
-  biografia?: string;
+  // null = vaciar el campo al editar (un `undefined` se omite del JSON y el
+  // backend lo interpreta como "no cambiar").
+  fotoUrl: string | null;
+  biografia: string | null;
   trayectoria: TrayectoriaItemInput[];
-  seleccion?: Seleccion;
+  seleccion: SeleccionInput | null;
   palmares: PalmaresItemInput[];
   estado: Estado;
-  anioRetiro?: number;
+  anioRetiro: number | null;
+}
+
+export interface SeleccionInput {
+  nombre: string;
+  anioInicio: number;
+  anioFin: number | null;
 }
 
 export const POSICIONES: Posicion[] = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];

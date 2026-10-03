@@ -12,5 +12,5 @@ export class SeleccionDto {
   @IsOptional()
   @IsInt()
   @Min(1900)
-  anioFin?: number;
+  anioFin?: number | null;
 }

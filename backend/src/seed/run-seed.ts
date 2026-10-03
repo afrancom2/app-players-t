@@ -12,6 +12,7 @@ import { Palmares } from '../players/entities/palmares.entity.js';
 import { Player } from '../players/entities/player.entity.js';
 import { Trayectoria } from '../players/entities/trayectoria.entity.js';
 import { User } from '../users/entities/user.entity.js';
+import { LEAGUE_TITLES, TITLE_GROUPS } from './titles-data.js';
 
 export async function runSeed(app: INestApplicationContext): Promise<void> {
   const leagueRepo = app.get<Repository<League>>(getRepositoryToken(League));
@@ -56,9 +57,9 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
     { nombre: 'HNL', pais: 'Croacia', equipos: ['Dinamo Zagreb', 'Hajduk Split', 'Rijeka', 'Osijek', 'Gorica', 'Lokomotiva Zagreb', 'Varaždin', 'Slaven Belupo', 'Istra 1961', 'Vukovar 1991'] },
     { nombre: 'SuperLiga', pais: 'Serbia', equipos: ['Estrella Roja de Belgrado', 'Partizán de Belgrado', 'Vojvodina', 'Železničar Pančevo', 'Novi Pazar', 'OFK Beograd', 'Čukarički', 'Radnik Surdulica', 'IMT Novi Beograd', 'Radnički 1923', 'Javor-Matis', 'TSC Bačka Topola', 'Radnički Niš', 'Mladost Lučani', 'Spartak Subotica', 'Napredak Kruševac'] },
     { nombre: 'Ekstraklasa', pais: 'Polonia', equipos: ['Legia Varsovia', 'Lech Poznan', 'Raków Częstochowa', 'Górnik Zabrze', 'Jagiellonia Białystok', 'GKS Katowice', 'Zagłębie Lubin', 'Wisła Płock', 'Pogoń Szczecin', 'Radomiak Radom', 'Korona Kielce', 'Motor Lublin', 'Cracovia', 'Widzew Łódź', 'Piast Gliwice', 'Lechia Gdańsk', 'Arka Gdynia', 'Bruk-Bet Termalica Nieciecza'] },
-    { nombre: 'Fortuna Liga', pais: 'República Checa', equipos: ['Slavia Praga', 'Sparta Praga', 'Viktoria Plzeň', 'Baník Ostrava', 'Sigma Olomouc', 'Slovácko', 'Bohemians 1905', 'Mladá Boleslav', 'Slovan Liberec', 'Jablonec', 'Hradec Králové', 'Zlín', 'Karviná', 'Teplice', 'Dukla Praga', 'Pardubice'] },
-    { nombre: 'Fortuna Liga', pais: 'Eslovaquia', equipos: ['Slovan Bratislava', 'Spartak Trnava', 'Žilina', 'DAC Dunajská Streda', 'Ružomberok', 'Trenčín', 'Košice', 'Tatran Prešov', 'Podbrezová', 'Zemplín Michalovce', 'Skalica', 'Komárno'] },
-    { nombre: 'Liga I', pais: 'Rumania', equipos: ['FCSB', 'CFR Cluj', 'Universitatea Craiova', 'Rapid Bucarest', 'Dinamo Bucarest', 'Universitatea Cluj', 'Farul Constanța', 'Petrolul Ploiești', 'Oțelul Galați', 'UTA Arad', 'Botoșani', 'Argeș Pitești', 'Hermannstadt', 'Csíkszereda Miercurea Ciuc', 'Unirea Slobozia', 'Metaloglobus Bucarest'] },
+    { nombre: 'Chance Liga', pais: 'República Checa', equipos: ['Slavia Praga', 'Sparta Praga', 'Viktoria Plzeň', 'Baník Ostrava', 'Sigma Olomouc', 'Slovácko', 'Bohemians 1905', 'Mladá Boleslav', 'Slovan Liberec', 'Jablonec', 'Hradec Králové', 'Zlín', 'Karviná', 'Teplice', 'Dukla Praga', 'Pardubice'] },
+    { nombre: 'Niké Liga', pais: 'Eslovaquia', equipos: ['Slovan Bratislava', 'Spartak Trnava', 'Žilina', 'DAC Dunajská Streda', 'Ružomberok', 'Trenčín', 'Košice', 'Tatran Prešov', 'Podbrezová', 'Zemplín Michalovce', 'Skalica', 'Komárno'] },
+    { nombre: 'SuperLiga', pais: 'Rumania', equipos: ['FCSB', 'CFR Cluj', 'Universitatea Craiova', 'Rapid Bucarest', 'Dinamo Bucarest', 'Universitatea Cluj', 'Farul Constanța', 'Petrolul Ploiești', 'Oțelul Galați', 'UTA Arad', 'Botoșani', 'Argeș Pitești', 'Hermannstadt', 'Csíkszereda Miercurea Ciuc', 'Unirea Slobozia', 'Metaloglobus Bucarest'] },
     { nombre: 'Superliga', pais: 'Dinamarca', equipos: ['FC Copenhague', 'Midtjylland', 'Brøndby', 'AGF', 'Nordsjælland', 'OB', 'Randers', 'Silkeborg', 'Viborg', 'Sønderjyske', 'Vejle', 'Fredericia'] },
     { nombre: 'Eliteserien', pais: 'Noruega', equipos: ['Bodø/Glimt', 'Molde', 'Rosenborg', 'Vålerenga', 'Brann', 'Viking', 'Lillestrøm', 'Tromsø', 'Sarpsborg 08', 'Fredrikstad', 'Start', 'Aalesund', 'Sandefjord', 'HamKam', 'Kristiansund', 'KFUM Oslo'] },
     { nombre: 'Allsvenskan', pais: 'Suecia', equipos: ['Malmö FF', 'AIK', 'Hammarby', 'Djurgården', 'IFK Göteborg', 'BK Häcken', 'IF Elfsborg', 'Mjällby AIF', 'GAIS', 'IFK Norrköping', 'Halmstads BK', 'IK Sirius', 'IF Brommapojkarna', 'Degerfors IF', 'Östers IF', 'IFK Värnamo'] },
@@ -93,10 +94,12 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   ];
 
   const teamsByName: Record<string, Team> = {};
+  const leaguesByKey: Record<string, League> = {};
   for (const [index, liga] of leaguesData.entries()) {
     const league = await leagueRepo.save(
       leagueRepo.create({ nombre: liga.nombre, pais: liga.pais, orden: index + 1 }),
     );
+    leaguesByKey[`${liga.pais}|${liga.nombre}`] = league;
     for (const teamName of liga.equipos) {
       teamsByName[teamName] = await teamRepo.save(
         teamRepo.create({ nombre: teamName, ligaId: league.id }),
@@ -105,24 +108,22 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   }
 
   console.log('Creando catálogo de títulos...');
-  const titleNames = [
-    'Mundial',
-    'Serie A',
-    'LaLiga',
-    'Bundesliga',
-    'Ligue 1',
-    'Copa Italia',
-    'Copa del Rey',
-    'Copa Alemana',
-    'Supercopa de Italia',
-    'Supercopa de Francia',
-    'Copa de la UEFA',
-    'Champions League',
-    'Eurocopa',
-  ];
   const titlesByName: Record<string, Title> = {};
-  for (const nombre of titleNames) {
-    titlesByName[nombre] = await titleRepo.save(titleRepo.create({ nombre }));
+  for (const [key, titulos] of Object.entries(LEAGUE_TITLES)) {
+    const league = leaguesByKey[key];
+    if (!league) throw new Error(`Títulos para una liga que no existe en el catálogo: ${key}`);
+    for (const [orden, nombre] of titulos.entries()) {
+      titlesByName[nombre] = await titleRepo.save(
+        titleRepo.create({ nombre, ligaId: league.id, grupo: null, orden }),
+      );
+    }
+  }
+  for (const grupo of TITLE_GROUPS) {
+    for (const [orden, nombre] of grupo.titulos.entries()) {
+      titlesByName[nombre] = await titleRepo.save(
+        titleRepo.create({ nombre, ligaId: null, grupo: grupo.codigo, orden }),
+      );
+    }
   }
 
   console.log('Creando usuarios de prueba...');
@@ -144,6 +145,16 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
   ]);
 
   console.log('Creando jugadores de ejemplo...');
+  // Datos reales verificados en Wikipedia (sección Honours e infobox) a septiembre de 2026.
+  const periodo = (club: string, anioInicio: number, anioFin?: number) =>
+    trayectoriaRepo.create({ clubId: teamsByName[club].id, anioInicio, anioFin });
+  const titulo = (nombre: string, cantidad: number, club?: string) =>
+    palmaresRepo.create({
+      tituloId: titlesByName[nombre].id,
+      cantidad,
+      clubId: club ? teamsByName[club].id : undefined,
+    });
+
   await playerRepo.save(
     playerRepo.create({
       nombreCompleto: 'Gianluigi Buffon',
@@ -153,61 +164,25 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
       biografia:
         'Gianluigi Buffon es un exfutbolista italiano nacido en 1978. Debutó muy joven en el Parma, brilló durante muchos años en la Juventus y fue clave para que Italia ganara el Mundial de 2006. Es considerado uno de los mejores porteros de la historia y se retiró en 2023.',
       trayectoria: [
-        trayectoriaRepo.create({ clubId: teamsByName['Parma'].id, anioInicio: 1995, anioFin: 2001 }),
-        trayectoriaRepo.create({ clubId: teamsByName['Juventus'].id, anioInicio: 2001, anioFin: 2018 }),
-        trayectoriaRepo.create({
-          clubId: teamsByName['Paris Saint-Germain'].id,
-          anioInicio: 2018,
-          anioFin: 2019,
-        }),
-        trayectoriaRepo.create({ clubId: teamsByName['Juventus'].id, anioInicio: 2019, anioFin: 2021 }),
-        trayectoriaRepo.create({ clubId: teamsByName['Parma'].id, anioInicio: 2021, anioFin: 2023 }),
+        periodo('Parma', 1995, 2001),
+        periodo('Juventus', 2001, 2018),
+        periodo('Paris Saint-Germain', 2018, 2019),
+        periodo('Juventus', 2019, 2021),
+        periodo('Parma', 2021, 2023),
       ],
       seleccionNombre: 'Italia',
       seleccionAnioInicio: 1997,
       seleccionAnioFin: 2018,
       palmares: [
-        palmaresRepo.create({ tituloId: titlesByName['Mundial'].id, cantidad: 1 }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Serie A'].id,
-          cantidad: 10,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa Italia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa Italia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Parma'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Supercopa de Italia'].id,
-          cantidad: 6,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Supercopa de Italia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Parma'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa de la UEFA'].id,
-          cantidad: 1,
-          clubId: teamsByName['Juventus'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Ligue 1'].id,
-          cantidad: 1,
-          clubId: teamsByName['Paris Saint-Germain'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Supercopa de Francia'].id,
-          cantidad: 1,
-          clubId: teamsByName['Paris Saint-Germain'].id,
-        }),
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Serie A', 10, 'Juventus'),
+        titulo('Copa Italia', 5, 'Juventus'),
+        titulo('Supercopa de Italia', 6, 'Juventus'),
+        titulo('Copa Italia', 1, 'Parma'),
+        titulo('Supercopa de Italia', 1, 'Parma'),
+        titulo('UEFA Europa League', 1, 'Parma'),
+        titulo('Ligue 1', 1, 'Paris Saint-Germain'),
+        titulo('Trofeo de Campeones de Francia', 1, 'Paris Saint-Germain'),
       ],
       estado: Estado.RETIRADO,
       anioRetiro: 2023,
@@ -216,72 +191,116 @@ export async function runSeed(app: INestApplicationContext): Promise<void> {
 
   await playerRepo.save(
     playerRepo.create({
-      nombreCompleto: 'Matthias Kessler',
+      nombreCompleto: 'Toni Kroos',
       nacionalidad: 'Alemania',
-      fechaNacimiento: '1995-03-12',
-      posicion: Posicion.PORTERO,
-      trayectoria: [trayectoriaRepo.create({ clubId: teamsByName['Bayern Múnich'].id, anioInicio: 2019 })],
-      seleccionNombre: 'Alemania',
-      seleccionAnioInicio: 2018,
-      palmares: [
-        palmaresRepo.create({
-          tituloId: titlesByName['Bundesliga'].id,
-          cantidad: 4,
-          clubId: teamsByName['Bayern Múnich'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa Alemana'].id,
-          cantidad: 1,
-          clubId: teamsByName['Bayern Múnich'].id,
-        }),
-      ],
-      estado: Estado.ACTIVO,
-    }),
-  );
-
-  await playerRepo.save(
-    playerRepo.create({
-      nombreCompleto: 'Álvaro Duarte',
-      nacionalidad: 'España',
-      fechaNacimiento: '1997-06-20',
-      posicion: Posicion.DEFENSA,
-      trayectoria: [trayectoriaRepo.create({ clubId: teamsByName['Villarreal'].id, anioInicio: 2020 })],
-      seleccionNombre: 'España',
-      seleccionAnioInicio: 2021,
-      palmares: [
-        palmaresRepo.create({
-          tituloId: titlesByName['LaLiga'].id,
-          cantidad: 1,
-          clubId: teamsByName['Villarreal'].id,
-        }),
-        palmaresRepo.create({
-          tituloId: titlesByName['Copa del Rey'].id,
-          cantidad: 1,
-          clubId: teamsByName['Villarreal'].id,
-        }),
-      ],
-      estado: Estado.ACTIVO,
-    }),
-  );
-
-  await playerRepo.save(
-    playerRepo.create({
-      nombreCompleto: 'Thierry Aubert',
-      nacionalidad: 'Francia',
-      fechaNacimiento: '1985-09-02',
-      posicion: Posicion.DELANTERO,
+      fechaNacimiento: '1990-01-04',
+      posicion: Posicion.MEDIOCAMPISTA,
+      fotoUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSG_rUWRhE83XrP8_UPr4SIa0Y2GVmj8IE_u4A-1-iF3OcLGyEHjG65R5s&s=10',
+      biografia:
+        'Toni Kroos es un exfutbolista alemán nacido en 1990 en Greifswald. Formado en el Bayern Múnich, jugó cedido en el Bayer Leverkusen y en 2014 fichó por el Real Madrid, donde fue pieza fija del mediocampo durante diez temporadas. Ganó seis Champions League y el Mundial de 2014 con Alemania, y se retiró en 2024 tras la Eurocopa disputada en su país.',
       trayectoria: [
-        trayectoriaRepo.create({ clubId: teamsByName['Lyon'].id, anioInicio: 2008, anioFin: 2015 }),
+        periodo('Bayern Múnich', 2007, 2009),
+        periodo('Bayer Leverkusen', 2009, 2010),
+        periodo('Bayern Múnich', 2010, 2014),
+        periodo('Real Madrid', 2014, 2024),
       ],
+      seleccionNombre: 'Alemania',
+      seleccionAnioInicio: 2010,
+      seleccionAnioFin: 2024,
       palmares: [
-        palmaresRepo.create({
-          tituloId: titlesByName['Ligue 1'].id,
-          cantidad: 1,
-          clubId: teamsByName['Lyon'].id,
-        }),
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Bundesliga', 3, 'Bayern Múnich'),
+        titulo('Copa de Alemania', 3, 'Bayern Múnich'),
+        titulo('Supercopa de Alemania', 1, 'Bayern Múnich'),
+        titulo('UEFA Champions League', 1, 'Bayern Múnich'),
+        titulo('Supercopa de la UEFA', 1, 'Bayern Múnich'),
+        titulo('Mundial de Clubes de la FIFA', 1, 'Bayern Múnich'),
+        titulo('LaLiga', 4, 'Real Madrid'),
+        titulo('Copa del Rey', 1, 'Real Madrid'),
+        titulo('Supercopa de España', 4, 'Real Madrid'),
+        titulo('UEFA Champions League', 5, 'Real Madrid'),
+        titulo('Supercopa de la UEFA', 3, 'Real Madrid'),
+        titulo('Mundial de Clubes de la FIFA', 5, 'Real Madrid'),
       ],
       estado: Estado.RETIRADO,
-      anioRetiro: 2015,
+      anioRetiro: 2024,
+    }),
+  );
+
+  await playerRepo.save(
+    playerRepo.create({
+      nombreCompleto: 'Sergio Ramos',
+      nacionalidad: 'España',
+      fechaNacimiento: '1986-03-30',
+      posicion: Posicion.DEFENSA,
+      fotoUrl:
+        'https://www.tudn.com/_next/image?url=https%3A%2F%2Fst1.uvnimg.com%2F56%2F07%2F52b41e294a94bb2892d8b66af2df%2Fgettyimages-691957402.jpg&w=1280&q=75',
+      biografia:
+        'Sergio Ramos es un futbolista español nacido en 1986 en Camas (Sevilla). Tras debutar en el Sevilla, jugó dieciséis temporadas en el Real Madrid, del que fue capitán, y después pasó por el Paris Saint-Germain, regresó al Sevilla y jugó en el Monterrey. Es el jugador con más partidos en la historia de la selección española, con la que ganó el Mundial de 2010 y las Eurocopas de 2008 y 2012. Desde enero de 2026 es agente libre.',
+      trayectoria: [
+        periodo('Sevilla', 2004, 2005),
+        periodo('Real Madrid', 2005, 2021),
+        periodo('Paris Saint-Germain', 2021, 2023),
+        periodo('Sevilla', 2023, 2024),
+        periodo('Monterrey', 2025, 2025),
+      ],
+      seleccionNombre: 'España',
+      seleccionAnioInicio: 2005,
+      seleccionAnioFin: 2021,
+      palmares: [
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Eurocopa', 2),
+        titulo('LaLiga', 5, 'Real Madrid'),
+        titulo('Copa del Rey', 2, 'Real Madrid'),
+        titulo('Supercopa de España', 4, 'Real Madrid'),
+        titulo('UEFA Champions League', 4, 'Real Madrid'),
+        titulo('Supercopa de la UEFA', 3, 'Real Madrid'),
+        titulo('Mundial de Clubes de la FIFA', 4, 'Real Madrid'),
+        titulo('Ligue 1', 2, 'Paris Saint-Germain'),
+        titulo('Trofeo de Campeones de Francia', 1, 'Paris Saint-Germain'),
+      ],
+      estado: Estado.ACTIVO,
+    }),
+  );
+
+  await playerRepo.save(
+    playerRepo.create({
+      nombreCompleto: 'Thierry Henry',
+      nacionalidad: 'Francia',
+      fechaNacimiento: '1977-08-17',
+      posicion: Posicion.DELANTERO,
+      biografia:
+        'Thierry Henry es un exfutbolista francés nacido en 1977 en Les Ulis. Debutó en el Mónaco, pasó brevemente por la Juventus y se convirtió en leyenda del Arsenal, del que es el máximo goleador histórico. Después ganó el triplete con el Barcelona en 2009 y cerró su carrera en los New York Red Bulls, con una breve cesión al Arsenal en 2012. Con Francia fue campeón del Mundial de 1998 y de la Eurocopa 2000, y se retiró en 2014.',
+      trayectoria: [
+        periodo('Mónaco', 1994, 1999),
+        periodo('Juventus', 1999, 1999),
+        periodo('Arsenal', 1999, 2007),
+        periodo('Barcelona', 2007, 2010),
+        periodo('New York Red Bulls', 2010, 2014),
+        periodo('Arsenal', 2012, 2012),
+      ],
+      seleccionNombre: 'Francia',
+      seleccionAnioInicio: 1997,
+      seleccionAnioFin: 2010,
+      palmares: [
+        titulo('Copa Mundial de la FIFA', 1),
+        titulo('Eurocopa', 1),
+        titulo('Copa Confederaciones de la FIFA', 1),
+        titulo('Ligue 1', 1, 'Mónaco'),
+        titulo('Premier League', 2, 'Arsenal'),
+        titulo('FA Cup', 2, 'Arsenal'),
+        titulo('FA Community Shield', 2, 'Arsenal'),
+        titulo('LaLiga', 2, 'Barcelona'),
+        titulo('Copa del Rey', 1, 'Barcelona'),
+        titulo('Supercopa de España', 1, 'Barcelona'),
+        titulo('UEFA Champions League', 1, 'Barcelona'),
+        titulo('Supercopa de la UEFA', 1, 'Barcelona'),
+        titulo('Mundial de Clubes de la FIFA', 1, 'Barcelona'),
+        titulo("MLS Supporters' Shield", 1, 'New York Red Bulls'),
+      ],
+      estado: Estado.RETIRADO,
+      anioRetiro: 2014,
     }),
   );
 

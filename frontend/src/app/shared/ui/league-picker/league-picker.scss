@@ -124,6 +124,17 @@
   letter-spacing: 0.03em;
 }
 
+.section {
+  padding: 10px 10px 4px;
+  font-size: 10.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.section:first-child {
+  padding-top: 0;
+}
+
 .empty {
   padding: 24px 8px;
   text-align: center;

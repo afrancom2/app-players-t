@@ -33,13 +33,15 @@ export class CreatePlayerDto {
   @IsEnum(Posicion)
   posicion!: Posicion;
 
+  // En los opcionales, `null` significa "vaciar el campo" al editar
+  // (un campo ausente, en cambio, se deja como está).
   @IsOptional()
   @IsUrl({ require_tld: false })
-  fotoUrl?: string;
+  fotoUrl?: string | null;
 
   @IsOptional()
   @IsString()
-  biografia?: string;
+  biografia?: string | null;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -49,7 +51,7 @@ export class CreatePlayerDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => SeleccionDto)
-  seleccion?: SeleccionDto;
+  seleccion?: SeleccionDto | null;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -62,5 +64,5 @@ export class CreatePlayerDto {
   @ValidateIf((dto: CreatePlayerDto) => dto.estado === Estado.RETIRADO)
   @IsInt()
   @Min(1900)
-  anioRetiro?: number;
+  anioRetiro?: number | null;
 }

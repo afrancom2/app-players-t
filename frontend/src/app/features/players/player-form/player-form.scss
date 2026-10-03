@@ -132,8 +132,17 @@
   font-size: 14px;
   color: var(--ink);
 }
-.league-trigger:hover {
+.league-trigger:hover:not(:disabled) {
   border-color: var(--accent);
+}
+.league-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.league-trigger span:not(.logo-fallback) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .league-trigger .logo {
   width: 22px;
@@ -164,6 +173,15 @@
 }
 .nationality-trigger .placeholder {
   color: var(--muted);
+}
+
+.picker-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.picker-row .rmbtn {
+  flex-shrink: 0;
 }
 
 .club-trigger {
@@ -239,6 +257,14 @@
 }
 @media (max-width: 640px) {
   .rowitem {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.rowitem.palmares-row {
+  grid-template-columns: 1fr 1fr 90px 32px;
+}
+@media (max-width: 640px) {
+  .rowitem.palmares-row {
     grid-template-columns: 1fr 1fr;
   }
 }

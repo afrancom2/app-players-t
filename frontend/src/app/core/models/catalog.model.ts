@@ -11,7 +11,10 @@ export interface Team {
   ligaId: string;
 }
 
+/** Un título pertenece a una liga (nacional de clubes) o a un grupo (internacional o selecciones). */
 export interface Title {
   id: string;
   nombre: string;
+  ligaId: string | null;
+  grupo: string | null;
 }

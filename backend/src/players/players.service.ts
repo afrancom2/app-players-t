@@ -32,6 +32,7 @@ export class PlayersService {
     const where: FindOptionsWhere<Player> = {};
     if (query.posicion) where.posicion = query.posicion;
     if (query.estado) where.estado = query.estado;
+    if (query.nacionalidad) where.nacionalidad = query.nacionalidad;
     if (query.search) where.nombreCompleto = ILike(`%${query.search}%`);
 
     let teamIds: number[] | null = null;
@@ -82,13 +83,13 @@ export class PlayersService {
       nacionalidad: dto.nacionalidad,
       fechaNacimiento: dto.fechaNacimiento,
       posicion: dto.posicion,
-      fotoUrl: dto.fotoUrl,
-      biografia: dto.biografia,
+      fotoUrl: dto.fotoUrl ?? null,
+      biografia: dto.biografia ?? null,
       estado: dto.estado,
-      anioRetiro: dto.estado === Estado.RETIRADO ? dto.anioRetiro : undefined,
-      seleccionNombre: dto.seleccion?.nombre,
-      seleccionAnioInicio: dto.seleccion?.anioInicio,
-      seleccionAnioFin: dto.seleccion?.anioFin,
+      anioRetiro: dto.estado === Estado.RETIRADO ? (dto.anioRetiro ?? null) : null,
+      seleccionNombre: dto.seleccion?.nombre ?? null,
+      seleccionAnioInicio: dto.seleccion?.anioInicio ?? null,
+      seleccionAnioFin: dto.seleccion?.anioFin ?? null,
       trayectoria: dto.trayectoria.map((item) => this.trayectoriaRepo.create(item)),
       palmares: dto.palmares.map((item) => this.palmaresRepo.create(item)),
     });
@@ -107,16 +108,18 @@ export class PlayersService {
     if (dto.nacionalidad !== undefined) player.nacionalidad = dto.nacionalidad;
     if (dto.fechaNacimiento !== undefined) player.fechaNacimiento = dto.fechaNacimiento;
     if (dto.posicion !== undefined) player.posicion = dto.posicion;
+    // Campo ausente (undefined) = no se toca; null = se vacía. TypeORM ignora
+    // undefined al guardar, por eso para vaciar se asigna null explícitamente.
     if (dto.fotoUrl !== undefined) player.fotoUrl = dto.fotoUrl;
     if (dto.biografia !== undefined) player.biografia = dto.biografia;
     if (dto.estado !== undefined) player.estado = dto.estado;
     if (dto.anioRetiro !== undefined) player.anioRetiro = dto.anioRetiro;
-    if (player.estado !== Estado.RETIRADO) player.anioRetiro = undefined;
+    if (player.estado !== Estado.RETIRADO) player.anioRetiro = null;
 
     if (dto.seleccion !== undefined) {
-      player.seleccionNombre = dto.seleccion?.nombre;
-      player.seleccionAnioInicio = dto.seleccion?.anioInicio;
-      player.seleccionAnioFin = dto.seleccion?.anioFin;
+      player.seleccionNombre = dto.seleccion?.nombre ?? null;
+      player.seleccionAnioInicio = dto.seleccion?.anioInicio ?? null;
+      player.seleccionAnioFin = dto.seleccion?.anioFin ?? null;
     }
 
     if (dto.trayectoria !== undefined) {
@@ -140,19 +143,31 @@ export class PlayersService {
   }
 
   private toResponse(player: Player) {
-    const trayectoria = player.trayectoria.map((item) => ({
+    // Postgres no garantiza el orden de las filas de una relación; se ordena
+    // cronológicamente (y el periodo abierto, sin anioFin, al final si empatan).
+    const ordenada = [...player.trayectoria].sort(
+      (a, b) =>
+        a.anioInicio - b.anioInicio || (a.anioFin ?? Infinity) - (b.anioFin ?? Infinity),
+    );
+    const trayectoria = ordenada.map((item) => ({
       clubId: { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId },
       anioInicio: item.anioInicio,
       anioFin: item.anioFin,
     }));
 
     const palmares = player.palmares.map((item) => ({
-      tituloId: { id: item.titulo.id, nombre: item.titulo.nombre },
+      tituloId: {
+        id: item.titulo.id,
+        nombre: item.titulo.nombre,
+        ligaId: item.titulo.ligaId,
+        grupo: item.titulo.grupo,
+      },
       cantidad: item.cantidad,
       clubId: item.club ? { id: item.club.id, nombre: item.club.nombre, ligaId: item.club.ligaId } : undefined,
     }));
 
-    const clubActualItem = getClubActual(trayectoria);
+    // Un jugador retirado no tiene club actual aunque algún periodo quedara sin anioFin.
+    const clubActualItem = player.estado === Estado.RETIRADO ? null : getClubActual(trayectoria);
 
     return {
       id: player.id,
@@ -160,19 +175,19 @@ export class PlayersService {
       nacionalidad: player.nacionalidad,
       fechaNacimiento: player.fechaNacimiento,
       posicion: player.posicion,
-      fotoUrl: player.fotoUrl,
-      biografia: player.biografia,
+      fotoUrl: player.fotoUrl ?? undefined,
+      biografia: player.biografia ?? undefined,
       trayectoria,
       seleccion: player.seleccionNombre
         ? {
             nombre: player.seleccionNombre,
             anioInicio: player.seleccionAnioInicio!,
-            anioFin: player.seleccionAnioFin,
+            anioFin: player.seleccionAnioFin ?? undefined,
           }
         : undefined,
       palmares,
       estado: player.estado,
-      anioRetiro: player.anioRetiro,
+      anioRetiro: player.anioRetiro ?? undefined,
       clubActual: clubActualItem ? clubActualItem.clubId : null,
       createdAt: player.createdAt,
       updatedAt: player.updatedAt,

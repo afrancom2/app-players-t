@@ -1,4 +1,4 @@
-import { Component, computed, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
 
 @Component({
@@ -8,6 +8,7 @@ import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
   styleUrl: './nationality-picker.scss',
 })
 export class NationalityPicker {
+  readonly title = input('Selecciona la nacionalidad');
   readonly closed = output<void>();
   readonly selected = output<string>();
 

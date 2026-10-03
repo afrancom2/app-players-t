@@ -45,7 +45,11 @@
           @for (item of p.trayectoria; track $index) {
             <div class="tnode">
               <span class="tline"></span>
-              <span class="tdot">{{ item.clubId.nombre.slice(0, 3).toUpperCase() }}</span>
+              @if (crestFor(item.clubId); as crest) {
+                <span class="tdot crest"><img [src]="crest" alt="" /></span>
+              } @else {
+                <span class="tdot">{{ item.clubId.nombre.slice(0, 3).toUpperCase() }}</span>
+              }
               <span class="tclub">{{ item.clubId.nombre }}</span>
               <span class="tyears mono">{{ item.anioInicio }}–{{ item.anioFin ?? 'act.' }}</span>
             </div>
@@ -71,7 +75,11 @@
           <div class="medals">
             @for (item of p.palmares; track $index) {
               <div class="medal">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"></path></svg>
+                @if (titleLogo(item.tituloId.nombre); as logo) {
+                  <img class="tlogo" [src]="logo" alt="" />
+                } @else {
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"></path></svg>
+                }
                 <div>
                   <div class="mn">{{ item.cantidad }} {{ item.tituloId.nombre }}</div>
                   @if (item.clubId) {

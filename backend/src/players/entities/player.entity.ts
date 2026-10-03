@@ -29,26 +29,28 @@ export class Player {
   @Column({ type: 'enum', enum: Posicion })
   posicion!: Posicion;
 
-  @Column({ name: 'foto_url', nullable: true })
-  fotoUrl?: string;
+  // Los opcionales admiten null: TypeORM ignora `undefined` al guardar, así
+  // que para vaciar un campo existente hay que asignarle null explícitamente.
+  @Column({ name: 'foto_url', type: 'varchar', nullable: true })
+  fotoUrl?: string | null;
 
   @Column({ type: 'text', nullable: true })
-  biografia?: string;
+  biografia?: string | null;
 
   @Column({ type: 'enum', enum: Estado })
   estado!: Estado;
 
-  @Column({ name: 'anio_retiro', nullable: true })
-  anioRetiro?: number;
+  @Column({ name: 'anio_retiro', type: 'int', nullable: true })
+  anioRetiro?: number | null;
 
-  @Column({ name: 'seleccion_nombre', nullable: true })
-  seleccionNombre?: string;
+  @Column({ name: 'seleccion_nombre', type: 'varchar', nullable: true })
+  seleccionNombre?: string | null;
 
-  @Column({ name: 'seleccion_anio_inicio', nullable: true })
-  seleccionAnioInicio?: number;
+  @Column({ name: 'seleccion_anio_inicio', type: 'int', nullable: true })
+  seleccionAnioInicio?: number | null;
 
-  @Column({ name: 'seleccion_anio_fin', nullable: true })
-  seleccionAnioFin?: number;
+  @Column({ name: 'seleccion_anio_fin', type: 'int', nullable: true })
+  seleccionAnioFin?: number | null;
 
   @OneToMany(() => Trayectoria, (item) => item.player, {
     cascade: true,
