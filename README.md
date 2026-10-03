@@ -19,13 +19,15 @@ localhost:4200
 ```
 
 # Ejecutar cuando hayan cambios en el codigo
-Desde la ventana de CMD ejecutar los siguientes comandos en orden: 
+Desde la ventana de CMD, parado en la carpeta del proyecto, ejecutar en orden:
 ```bash
 git pull
 ```
 ```bash
-git fetch
+docker compose up -d --build
 ```
+
+Esto reconstruye lo que haya cambiado y reinicia los contenedores. **Tus jugadores no se pierden**: cada vez que el backend arranca, actualiza solo el catálogo (ligas, equipos, títulos) si hay algo nuevo en el código, pero nunca toca jugadores ni usuarios ya cargados.
 
 # Administración de Jugadores
 
@@ -47,11 +49,25 @@ docker compose up -d --build
 Esto levanta, en orden, los tres servicios y un respaldo automático:
 
 1. **postgres** — base de datos, con los datos guardados en el volumen `postgres-data` (persisten entre reinicios).
-2. **backend** — espera a que Postgres esté sano, y si la base está **vacía** (primera vez), la puebla automáticamente con catálogos, usuarios y 4 jugadores de ejemplo. Si ya tiene datos (tus propios jugadores cargados), **no los toca**. Queda escuchando en `http://localhost:3000`.
+2. **backend** — espera a que Postgres esté sano. Cada vez que arranca:
+   - sincroniza el catálogo (ligas, equipos, títulos) con lo que haya en el código — crea lo nuevo, actualiza lo existente, y limpia lo que ya no se usa. Esto **nunca toca jugadores ni usuarios**, así que una actualización de código jamás borra datos reales.
+   - si la base está **vacía** (primera vez), además crea los usuarios de prueba y 4 jugadores de ejemplo. Si ya tiene datos, no los crea de nuevo.
+
+   Queda escuchando en `http://localhost:3000`.
 3. **frontend** — se sirve en `http://localhost:4200`.
 4. **postgres-backup** — hace un respaldo (`pg_dump`) apenas arranca y luego uno diario, guardándolos comprimidos en la carpeta `./backups` de este repo (no se sube a git).
 
 Para ver los logs en vivo: `docker compose logs -f`. Para apagar todo sin perder datos: `docker compose down`. Para apagar y **borrar también los datos** (usar con cuidado): `docker compose down -v`.
+
+### Resetear todo a los datos de fábrica
+
+Si alguna vez quieres borrar **todo** (jugadores reales incluidos) y volver a empezar con solo el catálogo y los datos de ejemplo:
+
+```bash
+docker compose exec -T backend node dist/seed/seed.js
+```
+
+⚠️ Esto es destructivo e irreversible (salvo restaurando un respaldo) — nunca se ejecuta solo, hay que correrlo a mano a propósito.
 
 ### Restaurar un respaldo
 
