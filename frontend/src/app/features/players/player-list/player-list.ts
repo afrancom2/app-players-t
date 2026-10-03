@@ -45,7 +45,13 @@ export class PlayerList implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.catalogs.ensureLoaded();
+    try {
+      await this.catalogs.ensureLoaded();
+    } catch {
+      // El interceptor HTTP ya mostró el toast con el motivo real del error.
+      this.loading.set(false);
+      return;
+    }
     await this.load();
   }
 
@@ -63,6 +69,9 @@ export class PlayerList implements OnInit {
       });
       this.players.set(response.items);
       this.total.set(response.total);
+    } catch {
+      // El interceptor HTTP ya mostró el toast con el motivo real del error;
+      // aquí solo evitamos que la lista se quede "cargando" para siempre.
     } finally {
       this.loading.set(false);
     }

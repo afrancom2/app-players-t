@@ -30,6 +30,9 @@ export class PlayerDetail implements OnInit {
     this.loading.set(true);
     try {
       this.player.set(await this.playersService.findOne(id));
+    } catch {
+      // El interceptor HTTP ya mostró el toast con el motivo real del error;
+      // aquí solo evitamos que la vista se quede "cargando" para siempre.
     } finally {
       this.loading.set(false);
     }
@@ -51,7 +54,7 @@ export class PlayerDetail implements OnInit {
       this.toast.success('Jugador eliminado.');
       await this.router.navigateByUrl('/jugadores');
     } catch {
-      this.toast.error('No se pudo eliminar el jugador.');
+      // El interceptor HTTP ya mostró el toast con el motivo real del error.
     }
   }
 

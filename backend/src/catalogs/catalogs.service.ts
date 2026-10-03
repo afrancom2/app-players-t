@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { League } from './entities/league.entity.js';
@@ -21,7 +21,11 @@ export class CatalogsService {
     return this.teamRepo.find({ order: { nombre: 'ASC' } });
   }
 
-  findTeamsByLeague(ligaId: number) {
+  async findTeamsByLeague(ligaId: number) {
+    const league = await this.leagueRepo.findOne({ where: { id: ligaId } });
+    if (!league) {
+      throw new NotFoundException('La liga indicada no existe.');
+    }
     return this.teamRepo.find({ where: { ligaId }, order: { nombre: 'ASC' } });
   }
 

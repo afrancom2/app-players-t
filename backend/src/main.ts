@@ -3,6 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DataSource } from 'typeorm';
 import { AppModule } from './app.module.js';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter.js';
+import { ValidationFailedException } from './common/exceptions/validation-failed.exception.js';
+import { flattenValidationErrors } from './common/validation/format-validation-errors.js';
 import { runSeed } from './seed/run-seed.js';
 
 async function bootstrap() {
@@ -14,11 +17,13 @@ async function bootstrap() {
     .split(',')
     .map((origin) => origin.trim());
   app.enableCors({ origin: corsOrigins });
+  app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => new ValidationFailedException(flattenValidationErrors(errors)),
     }),
   );
 

@@ -70,16 +70,20 @@ export class PlayerForm implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.catalogs.ensureLoaded();
     this.playerId = this.route.snapshot.paramMap.get('id');
-
-    if (this.playerId) {
-      const player = await this.playersService.findOne(this.playerId);
-      this.patchFromPlayer(player);
-    } else {
-      this.addTrayectoria();
+    try {
+      await this.catalogs.ensureLoaded();
+      if (this.playerId) {
+        const player = await this.playersService.findOne(this.playerId);
+        this.patchFromPlayer(player);
+      } else {
+        this.addTrayectoria();
+      }
+    } catch {
+      // El interceptor HTTP ya mostró el toast con el motivo real del error.
+    } finally {
+      this.loading.set(false);
     }
-    this.loading.set(false);
   }
 
   private patchFromPlayer(player: Player): void {
@@ -264,7 +268,8 @@ export class PlayerForm implements OnInit {
       this.toast.success(this.isEditMode ? 'Cambios guardados.' : 'Jugador creado.');
       await this.router.navigate(['/jugadores', saved.id]);
     } catch {
-      this.toast.error('No se pudo guardar el jugador.');
+      // El interceptor HTTP ya mostró un toast claro con el motivo real del
+      // error (validación, servidor, base de datos o conexión).
     } finally {
       this.saving.set(false);
     }
