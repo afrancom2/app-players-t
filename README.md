@@ -19,15 +19,17 @@ localhost:4200
 ```
 
 # Ejecutar cuando hayan cambios en el codigo
-Desde la ventana de CMD, parado en la carpeta del proyecto, ejecutar en orden:
+Desde la ventana de CMD (la misma ventana negra de arriba), ejecutar los siguientes comandos en orden:
 ```bash
 git pull
 ```
+dar enter
 ```bash
 docker compose up -d --build
 ```
+dar enter
 
-Esto reconstruye lo que haya cambiado y reinicia los contenedores. **Tus jugadores no se pierden**: cada vez que el backend arranca, actualiza solo el catálogo (ligas, equipos, títulos) si hay algo nuevo en el código, pero nunca toca jugadores ni usuarios ya cargados.
+Con esto queda actualizado. **No se te van a borrar los jugadores que hayas cargado.**
 
 # Administración de Jugadores
 
