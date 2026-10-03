@@ -1,0 +1,68 @@
+export interface LeagueSeed {
+  nombre: string;
+  pais: string;
+  equipos: string[];
+}
+
+// Top ~55 ligas del mundo (aproximación a la clasificación de la IFFHS; el
+// sitio oficial no publica ahora mismo una tabla completa verificable más
+// allá de las primeras ~25 posiciones, así que el orden desde ahí es una
+// aproximación razonable, no un dato oficial exacto).
+export const LEAGUES_DATA: LeagueSeed[] = [
+  { nombre: 'Premier League', pais: 'Inglaterra', equipos: ['Manchester City', 'Liverpool', 'Arsenal', 'Manchester United', 'Chelsea', 'Tottenham Hotspur', 'Newcastle United', 'Aston Villa', 'West Ham United', 'Everton', 'Wolverhampton Wanderers', 'Brighton & Hove Albion', 'Crystal Palace', 'Nottingham Forest', 'Fulham', 'Brentford', 'Bournemouth', 'Leeds United', 'Burnley', 'Sunderland'] },
+  { nombre: 'LaLiga', pais: 'España', equipos: ['Real Sociedad', 'Villarreal', 'Athletic Club', 'Real Madrid', 'Barcelona', 'Atlético de Madrid', 'Real Betis', 'Sevilla', 'Valencia', 'Celta de Vigo', 'Espanyol', 'Getafe', 'Osasuna', 'Mallorca', 'Rayo Vallecano', 'Alavés', 'Girona', 'Levante', 'Elche', 'Real Oviedo'] },
+  { nombre: 'Serie A', pais: 'Italia', equipos: ['Juventus', 'Parma', 'Inter', 'Milan', 'Napoli', 'Roma', 'Atalanta', 'Lazio', 'Fiorentina', 'Bologna', 'Torino', 'Genoa', 'Udinese', 'Cagliari', 'Hellas Verona', 'Como', 'Lecce', 'Sassuolo', 'Pisa', 'Cremonese'] },
+  { nombre: 'Bundesliga', pais: 'Alemania', equipos: ['Bayern Múnich', 'Borussia Dortmund', 'RB Leipzig', 'Bayer Leverkusen', 'Eintracht Frankfurt', 'VfB Stuttgart', 'Borussia Mönchengladbach', 'SC Freiburg', 'TSG Hoffenheim', 'Werder Bremen', 'Mainz 05', 'Union Berlin', 'VfL Wolfsburg', 'FC Augsburg', '1. FC Heidenheim', 'FC St. Pauli', 'Hamburger SV', '1. FC Köln'] },
+  { nombre: 'Ligue 1', pais: 'Francia', equipos: ['Paris Saint-Germain', 'Marsella', 'Lyon', 'Mónaco', 'Lille', 'Lens', 'Rennes', 'Nice', 'Strasbourg', 'Toulouse', 'Nantes', 'Brest', 'Auxerre', 'Angers', 'Le Havre', 'Metz', 'Lorient', 'Paris FC'] },
+  { nombre: 'Brasileirão', pais: 'Brasil', equipos: ['Flamengo', 'Palmeiras', 'São Paulo', 'Corinthians', 'Grêmio', 'Atlético Mineiro', 'Fluminense', 'Botafogo', 'Internacional', 'Cruzeiro', 'Bahia', 'Vasco da Gama', 'Bragantino', 'Fortaleza', 'Santos', 'Vitória', 'Juventude', 'Ceará', 'Mirassol', 'Sport Recife'] },
+  { nombre: 'Liga Profesional de Fútbol', pais: 'Argentina', equipos: ['River Plate', 'Boca Juniors', 'Racing Club', 'Independiente', 'San Lorenzo', 'Vélez Sarsfield', 'Argentinos Juniors', 'Talleres (Córdoba)', 'Estudiantes de La Plata', 'Gimnasia La Plata', 'Godoy Cruz', 'Huracán', 'Lanús', 'Banfield', 'Newell\'s Old Boys', 'Rosario Central', 'Instituto', 'Belgrano', 'Platense', 'Tigre', 'Barracas Central', 'Sarmiento (Junín)', 'Defensa y Justicia', 'Central Córdoba (SdE)', 'Unión (Santa Fe)', 'Independiente Rivadavia', 'Deportivo Riestra', 'Atlético Tucumán', 'San Martín (SJ)', 'Aldosivi'] },
+  { nombre: 'Eredivisie', pais: 'Países Bajos', equipos: ['Ajax', 'PSV Eindhoven', 'Feyenoord', 'AZ Alkmaar', 'FC Twente', 'FC Utrecht', 'FC Groningen', 'Sparta Rotterdam', 'NEC Nijmegen', 'SC Heerenveen', 'Go Ahead Eagles', 'Fortuna Sittard', 'Heracles Almelo', 'NAC Breda', 'PEC Zwolle', 'Volendam', 'Excelsior', 'Telstar'] },
+  { nombre: 'Primeira Liga', pais: 'Portugal', equipos: ['Benfica', 'Porto', 'Sporting CP', 'Braga', 'Vitória de Guimarães', 'Rio Ave', 'Estoril Praia', 'Gil Vicente', 'Arouca', 'Famalicão', 'Moreirense', 'Casa Pia', 'Santa Clara', 'Nacional', 'Estrela da Amadora', 'AVS', 'Alverca', 'Tondela'] },
+  { nombre: 'Süper Lig', pais: 'Turquía', equipos: ['Galatasaray', 'Fenerbahçe', 'Beşiktaş', 'Trabzonspor', 'Başakşehir', 'Konyaspor', 'Kayserispor', 'Samsunspor', 'Antalyaspor', 'Alanyaspor', 'Göztepe', 'Gaziantep', 'Eyüpspor', 'Kasımpaşa', 'Rizespor', 'Gençlerbirliği', 'Kocaelispor', 'Fatih Karagümrük'] },
+  { nombre: 'Jupiler Pro League', pais: 'Bélgica', equipos: ['Club Brugge', 'Anderlecht', 'Genk', 'Unión Saint-Gilloise', 'Standard Liège', 'Gent', 'Antwerp', 'Charleroi', 'Cercle Brugge', 'STVV', 'Westerlo', 'Mechelen', 'OH Leuven', 'Zulte Waregem', 'Dender', 'RAAL La Louvière'] },
+  { nombre: 'Saudi Pro League', pais: 'Arabia Saudita', equipos: ['Al Hilal', 'Al Nassr', 'Al Ittihad', 'Al Ahli', 'Al Qadsiah', 'Al Taawoun', 'Al Shabab', 'Al Ettifaq', 'Al Fateh', 'Al Fayha', 'Neom', 'Al Khaleej', 'Al Riyadh', 'Damac', 'Al Kholood', 'Al Hazem', 'Al Okhdood', 'Al Najma'] },
+  { nombre: 'Liga MX', pais: 'México', equipos: ['América', 'Chivas Guadalajara', 'Cruz Azul', 'Monterrey', 'Tigres UANL', 'Pumas UNAM', 'Toluca', 'Santos Laguna', 'Pachuca', 'León', 'Atlas', 'Necaxa', 'Puebla', 'Tijuana', 'Mazatlán', 'Querétaro', 'Juárez', 'Atlético San Luis'] },
+  { nombre: 'MLS', pais: 'Estados Unidos', equipos: ['LA Galaxy', 'LAFC', 'Inter Miami', 'Seattle Sounders', 'Atlanta United', 'Columbus Crew', 'FC Cincinnati', 'Philadelphia Union', 'New York City FC', 'New York Red Bulls', 'Orlando City', 'Nashville SC', 'Charlotte FC', 'Toronto FC', 'CF Montréal', 'D.C. United', 'Chicago Fire', 'New England Revolution', 'Real Salt Lake', 'Colorado Rapids', 'Sporting Kansas City', 'FC Dallas', 'Houston Dynamo', 'Austin FC', 'Minnesota United', 'St. Louis City SC', 'Portland Timbers', 'Vancouver Whitecaps', 'San Jose Earthquakes', 'San Diego FC'] },
+  { nombre: 'Scottish Premiership', pais: 'Escocia', equipos: ['Celtic', 'Rangers', 'Aberdeen', 'Hearts', 'Hibernian', 'Dundee United', 'Motherwell', 'Kilmarnock', 'St Mirren', 'Dundee', 'Falkirk', 'Livingston'] },
+  { nombre: 'Bundesliga', pais: 'Austria', equipos: ['Red Bull Salzburgo', 'Rapid Viena', 'Sturm Graz', 'Austria Viena', 'LASK', 'Wolfsberger AC', 'TSV Hartberg', 'SV Ried', 'Grazer AK', 'Blau-Weiß Linz', 'Rheindorf Altach', 'WSG Tirol'] },
+  { nombre: 'Super League', pais: 'Suiza', equipos: ['Young Boys', 'Basilea', 'Servette', 'Zúrich', 'St. Gallen', 'Lugano', 'Sion', 'Lucerna', 'Lausana-Sport', 'Thun', 'Winterthur', 'Grasshopper'] },
+  { nombre: 'Premier Liga', pais: 'Rusia', equipos: ['Zenit San Petersburgo', 'Spartak Moscú', 'CSKA Moscú', 'Dinamo Moscú', 'Krasnodar', 'Lokomotiv Moscú', 'Rubin Kazán', 'Rostov', 'Akhmat Grozni', 'Krylia Sovetov Samara', 'Dynamo Makhachkalá', 'Baltika Kaliningrado', 'Orenburg', 'Pari Nizhni Nóvgorod', 'Sochi', 'Akron Tolyatti'] },
+  { nombre: 'Ukrainian Premier League', pais: 'Ucrania', equipos: ['Shakhtar Donetsk', 'Dinamo Kiev', 'Dnipro-1', 'Vorskla Poltava', 'Zorya Luhansk', 'Kryvbas Kryvyi Rih', 'Karpaty Lviv', 'Oleksandriya', 'Rukh Lviv', 'Kolos Kovalivka', 'Polissya Zhytomyr', 'Metalist 1925 Kharkiv', 'LNZ Cherkasy', 'Veres Rivne', 'Obolon Kiev', 'Epitsentr Kamianets-Podilskyi'] },
+  { nombre: 'HNL', pais: 'Croacia', equipos: ['Dinamo Zagreb', 'Hajduk Split', 'Rijeka', 'Osijek', 'Gorica', 'Lokomotiva Zagreb', 'Varaždin', 'Slaven Belupo', 'Istra 1961', 'Vukovar 1991'] },
+  { nombre: 'SuperLiga', pais: 'Serbia', equipos: ['Estrella Roja de Belgrado', 'Partizán de Belgrado', 'Vojvodina', 'Železničar Pančevo', 'Novi Pazar', 'OFK Beograd', 'Čukarički', 'Radnik Surdulica', 'IMT Novi Beograd', 'Radnički 1923', 'Javor-Matis', 'TSC Bačka Topola', 'Radnički Niš', 'Mladost Lučani', 'Spartak Subotica', 'Napredak Kruševac'] },
+  { nombre: 'Ekstraklasa', pais: 'Polonia', equipos: ['Legia Varsovia', 'Lech Poznan', 'Raków Częstochowa', 'Górnik Zabrze', 'Jagiellonia Białystok', 'GKS Katowice', 'Zagłębie Lubin', 'Wisła Płock', 'Pogoń Szczecin', 'Radomiak Radom', 'Korona Kielce', 'Motor Lublin', 'Cracovia', 'Widzew Łódź', 'Piast Gliwice', 'Lechia Gdańsk', 'Arka Gdynia', 'Bruk-Bet Termalica Nieciecza'] },
+  { nombre: 'Chance Liga', pais: 'República Checa', equipos: ['Slavia Praga', 'Sparta Praga', 'Viktoria Plzeň', 'Baník Ostrava', 'Sigma Olomouc', 'Slovácko', 'Bohemians 1905', 'Mladá Boleslav', 'Slovan Liberec', 'Jablonec', 'Hradec Králové', 'Zlín', 'Karviná', 'Teplice', 'Dukla Praga', 'Pardubice'] },
+  { nombre: 'Niké Liga', pais: 'Eslovaquia', equipos: ['Slovan Bratislava', 'Spartak Trnava', 'Žilina', 'DAC Dunajská Streda', 'Ružomberok', 'Trenčín', 'Košice', 'Tatran Prešov', 'Podbrezová', 'Zemplín Michalovce', 'Skalica', 'Komárno'] },
+  { nombre: 'SuperLiga', pais: 'Rumania', equipos: ['FCSB', 'CFR Cluj', 'Universitatea Craiova', 'Rapid Bucarest', 'Dinamo Bucarest', 'Universitatea Cluj', 'Farul Constanța', 'Petrolul Ploiești', 'Oțelul Galați', 'UTA Arad', 'Botoșani', 'Argeș Pitești', 'Hermannstadt', 'Csíkszereda Miercurea Ciuc', 'Unirea Slobozia', 'Metaloglobus Bucarest'] },
+  { nombre: 'Superliga', pais: 'Dinamarca', equipos: ['FC Copenhague', 'Midtjylland', 'Brøndby', 'AGF', 'Nordsjælland', 'OB', 'Randers', 'Silkeborg', 'Viborg', 'Sønderjyske', 'Vejle', 'Fredericia'] },
+  { nombre: 'Eliteserien', pais: 'Noruega', equipos: ['Bodø/Glimt', 'Molde', 'Rosenborg', 'Vålerenga', 'Brann', 'Viking', 'Lillestrøm', 'Tromsø', 'Sarpsborg 08', 'Fredrikstad', 'Start', 'Aalesund', 'Sandefjord', 'HamKam', 'Kristiansund', 'KFUM Oslo'] },
+  { nombre: 'Allsvenskan', pais: 'Suecia', equipos: ['Malmö FF', 'AIK', 'Hammarby', 'Djurgården', 'IFK Göteborg', 'BK Häcken', 'IF Elfsborg', 'Mjällby AIF', 'GAIS', 'IFK Norrköping', 'Halmstads BK', 'IK Sirius', 'IF Brommapojkarna', 'Degerfors IF', 'Östers IF', 'IFK Värnamo'] },
+  { nombre: 'Super League', pais: 'Grecia', equipos: ['Olympiacos', 'Panathinaikos', 'AEK Atenas', 'PAOK', 'Aris', 'AEL', 'OFI Creta', 'Asteras Tripolis', 'Panetolikos', 'Atromitos', 'Volos', 'Levadiakos', 'Panserraikos', 'AE Kifisia'] },
+  { nombre: "Ligat ha'Al", pais: 'Israel', equipos: ['Maccabi Tel Aviv', 'Maccabi Haifa', 'Hapoel Beer Sheva', 'Beitar Jerusalem', 'Hapoel Tel Aviv', 'Maccabi Netanya', 'Bnei Sakhnin', 'Hapoel Haifa', 'Ironi Kiryat Shmona', 'Hapoel Jerusalem', 'Hapoel Petah Tikva', 'FC Ashdod', 'Ironi Tiberias', 'Maccabi Bnei Reineh'] },
+  { nombre: 'First Division', pais: 'Chipre', equipos: ['APOEL', 'Omonia Nicosia', 'AEK Larnaca'] },
+  { nombre: 'Premier League', pais: 'Egipto', equipos: ['Al Ahly', 'Zamalek', 'Pyramids FC'] },
+  { nombre: 'Botola Pro', pais: 'Marruecos', equipos: ['Raja Casablanca', 'Wydad Casablanca', 'FAR Rabat'] },
+  { nombre: 'J1 League', pais: 'Japón', equipos: ['Vissel Kobe', 'Yokohama F. Marinos', 'Kawasaki Frontale', 'Urawa Red Diamonds'] },
+  { nombre: 'K League 1', pais: 'Corea del Sur', equipos: ['Ulsan HD', 'Jeonbuk Hyundai Motors', 'Pohang Steelers'] },
+  { nombre: 'Super League', pais: 'China', equipos: ['Shanghai Port', 'Shandong Taishan', 'Beijing Guoan'] },
+  { nombre: 'A-League', pais: 'Australia', equipos: ['Melbourne City', 'Sydney FC', 'Central Coast Mariners'] },
+  { nombre: 'Categoría Primera A', pais: 'Colombia', equipos: ['Atlético Nacional', 'Millonarios', 'América de Cali', 'Deportivo Cali'] },
+  { nombre: 'LigaPro', pais: 'Ecuador', equipos: ['Barcelona SC', 'Emelec', 'Liga de Quito', 'Independiente del Valle'] },
+  { nombre: 'Primera División', pais: 'Uruguay', equipos: ['Peñarol', 'Nacional', 'Defensor Sporting'] },
+  { nombre: 'Primera División', pais: 'Paraguay', equipos: ['Olimpia', 'Cerro Porteño', 'Libertad'] },
+  { nombre: 'Primera División', pais: 'Chile', equipos: ['Colo-Colo', 'Universidad de Chile', 'Universidad Católica'] },
+  { nombre: 'Liga 1', pais: 'Perú', equipos: ['Universitario de Deportes', 'Alianza Lima', 'Sporting Cristal'] },
+  { nombre: 'Primera División', pais: 'Costa Rica', equipos: ['Saprissa', 'Alajuelense', 'Herediano'] },
+  { nombre: 'División Profesional', pais: 'Bolivia', equipos: ['Bolívar', 'The Strongest', 'Always Ready'] },
+  { nombre: 'Liga FUTVE', pais: 'Venezuela', equipos: ['Deportivo Táchira', 'Caracas FC', 'Metropolitanos'] },
+  { nombre: 'NB I', pais: 'Hungría', equipos: ['Ferencváros', 'Puskás Akadémia', 'Győri ETO'] },
+  { nombre: 'First League', pais: 'Bulgaria', equipos: ['Ludogorets Razgrado', 'CSKA Sofía', 'Levski Sofía'] },
+  { nombre: 'Veikkausliiga', pais: 'Finlandia', equipos: ['HJK Helsinki', 'KuPS Kuopio', 'Inter Turku'] },
+  { nombre: 'Besta deild karla', pais: 'Islandia', equipos: ['Valur', 'KR Reykjavík', 'Breidablik'] },
+  { nombre: 'Stars League', pais: 'Catar', equipos: ['Al Sadd', 'Al Duhail', 'Al Rayyan'] },
+  { nombre: 'Pro League', pais: 'Emiratos Árabes Unidos', equipos: ['Al Ain', 'Shabab Al Ahli', 'Al Wasl'] },
+  { nombre: 'Indian Super League', pais: 'India', equipos: ['Mohun Bagan', 'Bengaluru FC', 'Mumbai City FC'] },
+  { nombre: 'Thai League 1', pais: 'Tailandia', equipos: ['Buriram United', 'Bangkok United', 'Muangthong United'] },
+  { nombre: 'Premier Soccer League', pais: 'Sudáfrica', equipos: ['Mamelodi Sundowns', 'Orlando Pirates', 'Kaizer Chiefs'] },
+  { nombre: 'Ligue Professionnelle 1', pais: 'Túnez', equipos: ['Espérance de Tunis', 'Étoile du Sahel', 'Club Africain'] },
+];
