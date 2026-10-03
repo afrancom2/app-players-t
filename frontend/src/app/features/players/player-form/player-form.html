@@ -47,7 +47,7 @@
               <label>Posición</label>
               <select formControlName="posicion">
                 @for (pos of posiciones; track pos) {
-                  <option [value]="pos">{{ pos }}</option>
+                  <option [value]="pos">{{ posicionLabels[pos] }}</option>
                 }
               </select>
             </div>

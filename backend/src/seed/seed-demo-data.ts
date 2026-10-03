@@ -105,7 +105,7 @@ export async function seedDemoData(app: INestApplicationContext): Promise<void> 
       nombreCompleto: 'Toni Kroos',
       nacionalidad: 'Alemania',
       fechaNacimiento: '1990-01-04',
-      posicion: Posicion.MEDIOCAMPISTA,
+      posicion: Posicion.MEDIO_CENTRO_DEFENSIVO,
       fotoUrl:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSG_rUWRhE83XrP8_UPr4SIa0Y2GVmj8IE_u4A-1-iF3OcLGyEHjG65R5s&s=10',
       biografia:
@@ -144,7 +144,7 @@ export async function seedDemoData(app: INestApplicationContext): Promise<void> 
       nombreCompleto: 'Sergio Ramos',
       nacionalidad: 'España',
       fechaNacimiento: '1986-03-30',
-      posicion: Posicion.DEFENSA,
+      posicion: Posicion.DEFENSA_CENTRAL,
       fotoUrl:
         'https://www.tudn.com/_next/image?url=https%3A%2F%2Fst1.uvnimg.com%2F56%2F07%2F52b41e294a94bb2892d8b66af2df%2Fgettyimages-691957402.jpg&w=1280&q=75',
       biografia:
@@ -180,7 +180,7 @@ export async function seedDemoData(app: INestApplicationContext): Promise<void> 
       nombreCompleto: 'Thierry Henry',
       nacionalidad: 'Francia',
       fechaNacimiento: '1977-08-17',
-      posicion: Posicion.DELANTERO,
+      posicion: Posicion.DELANTERO_CENTRO,
       biografia:
         'Thierry Henry es un exfutbolista francés nacido en 1977 en Les Ulis. Debutó en el Mónaco, pasó brevemente por la Juventus y se convirtió en leyenda del Arsenal, del que es el máximo goleador histórico. Después ganó el triplete con el Barcelona en 2009 y cerró su carrera en los New York Red Bulls, con una breve cesión al Arsenal en 2012. Con Francia fue campeón del Mundial de 1998 y de la Eurocopa 2000, y se retiró en 2014.',
       trayectoria: [

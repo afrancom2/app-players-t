@@ -64,7 +64,7 @@
       <select [(ngModel)]="posicion" (ngModelChange)="applyFilters()">
         <option value="">Posición: todas</option>
         @for (pos of posiciones; track pos) {
-          <option [value]="pos">{{ pos }}</option>
+          <option [value]="pos">{{ posicionLabels[pos] }}</option>
         }
       </select>
 
@@ -106,7 +106,7 @@
         <button class="card-player" (click)="openPlayer(player)">
           <div class="photo">
             <app-player-photo [nombre]="player.nombreCompleto" [posicion]="player.posicion" [fotoUrl]="player.fotoUrl" />
-            <span class="posbadge">{{ player.posicion.slice(0, 3).toUpperCase() }}</span>
+            <span class="posbadge">{{ player.posicion }}</span>
             <span class="cname">{{ player.nombreCompleto }}</span>
           </div>
           <div class="cfoot">

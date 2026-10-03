@@ -1,4 +1,4 @@
-export type Posicion = 'Portero' | 'Defensa' | 'Mediocampista' | 'Delantero';
+export type Posicion = 'POR' | 'DFC' | 'LD' | 'LI' | 'MCD' | 'MCO' | 'MD' | 'MI' | 'ED' | 'EI' | 'DC';
 export type Estado = 'activo' | 'retirado';
 
 export interface ClubRef {
@@ -103,4 +103,19 @@ export interface SeleccionInput {
   anioFin: number | null;
 }
 
-export const POSICIONES: Posicion[] = ['Portero', 'Defensa', 'Mediocampista', 'Delantero'];
+export const POSICIONES: Posicion[] = ['POR', 'DFC', 'LD', 'LI', 'MCD', 'MCO', 'MD', 'MI', 'ED', 'EI', 'DC'];
+
+/** Nombre completo para mostrar en selects y en la ficha; el valor guardado es siempre la abreviación. */
+export const POSICION_LABELS: Record<Posicion, string> = {
+  POR: 'Portero',
+  DFC: 'Defensa central',
+  LD: 'Lateral derecho',
+  LI: 'Lateral izquierdo',
+  MCD: 'Medio centro defensivo',
+  MCO: 'Medio centro ofensivo',
+  MD: 'Medio derecho',
+  MI: 'Medio izquierdo',
+  ED: 'Extremo derecho',
+  EI: 'Extremo izquierdo',
+  DC: 'Delantero centro',
+};

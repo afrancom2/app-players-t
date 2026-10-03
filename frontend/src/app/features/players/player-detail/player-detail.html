@@ -23,7 +23,7 @@
         <div class="hero-bottom">
           <h1>{{ p.nombreCompleto }}</h1>
           <div class="herotags">
-            <span class="htag">{{ p.posicion }}</span>
+            <span class="htag">{{ posicionLabels[p.posicion] }}</span>
             <span class="htag">{{ p.estado === 'activo' ? 'Activo' : 'Retirado · ' + p.anioRetiro }}</span>
             <span class="htag">{{ p.nacionalidad }}</span>
           </div>

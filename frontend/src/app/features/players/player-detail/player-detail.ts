@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { TEAM_LOGOS } from '../../../core/data/team-logos';
 import { titleLogoPath } from '../../../core/data/title-logos';
+import { POSICION_LABELS } from '../../../core/models/player.model';
 import type { ClubRef, Player } from '../../../core/models/player.model';
 import { CatalogsService } from '../../../core/services/catalogs.service';
 import { PlayersService } from '../../../core/services/players.service';
@@ -25,6 +26,7 @@ export class PlayerDetail implements OnInit {
   private readonly toast = inject(ToastService);
   private readonly catalogs = inject(CatalogsService);
 
+  protected readonly posicionLabels = POSICION_LABELS;
   protected readonly player = signal<Player | null>(null);
   protected readonly loading = signal(true);
 

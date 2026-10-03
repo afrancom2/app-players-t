@@ -8,7 +8,7 @@ import { findTitleGroup, TITLE_GROUP_LOGOS, type TitleGroup } from '../../../cor
 import { titleInitials, titleLogoPath } from '../../../core/data/title-logos';
 import type { League, Team, Title } from '../../../core/models/catalog.model';
 import type { Estado, Player, PlayerInput, Posicion } from '../../../core/models/player.model';
-import { POSICIONES } from '../../../core/models/player.model';
+import { POSICION_LABELS, POSICIONES } from '../../../core/models/player.model';
 import { CatalogsService } from '../../../core/services/catalogs.service';
 import { PlayersService } from '../../../core/services/players.service';
 import { ClubPicker } from '../../../shared/ui/club-picker/club-picker';
@@ -34,6 +34,7 @@ export class PlayerForm implements OnInit {
   private readonly toast = inject(ToastService);
 
   protected readonly posiciones = POSICIONES;
+  protected readonly posicionLabels = POSICION_LABELS;
   protected readonly step = signal<Step>(1);
   protected readonly saving = signal(false);
   protected readonly loading = signal(true);
@@ -54,7 +55,7 @@ export class PlayerForm implements OnInit {
     nombreCompleto: ['', Validators.required],
     nacionalidad: ['', Validators.required],
     fechaNacimiento: ['', Validators.required],
-    posicion: ['Portero' as Posicion, Validators.required],
+    posicion: ['POR' as Posicion, Validators.required],
     fotoUrl: [''],
     biografia: [''],
     estado: ['activo' as Estado, Validators.required],

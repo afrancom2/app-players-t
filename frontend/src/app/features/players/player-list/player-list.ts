@@ -5,7 +5,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { FIFA_NATIONALITIES } from '../../../core/data/fifa-nationalities';
 import type { League, Team } from '../../../core/models/catalog.model';
 import type { Estado, Player, Posicion } from '../../../core/models/player.model';
-import { POSICIONES } from '../../../core/models/player.model';
+import { POSICION_LABELS, POSICIONES } from '../../../core/models/player.model';
 import { CatalogsService } from '../../../core/services/catalogs.service';
 import { PlayersService } from '../../../core/services/players.service';
 import { PlayerPhoto } from '../../../shared/ui/player-photo/player-photo';
@@ -25,6 +25,7 @@ export class PlayerList implements OnInit {
   private readonly router = inject(Router);
 
   protected readonly posiciones = POSICIONES;
+  protected readonly posicionLabels = POSICION_LABELS;
   protected readonly players = signal<Player[]>([]);
   protected readonly nacionalidades = FIFA_NATIONALITIES;
   protected readonly showFilters = signal(false);
