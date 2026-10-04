@@ -31,6 +31,9 @@ dar enter
 
 Con esto queda actualizado. **No se te van a borrar los jugadores que hayas cargado.**
 
+# En caso de error
+Ir al programa de Docker y dar clic en el que dice **jugadores-backend** para revisar el error, y copiar el ultimo mensaje de error que aparece en pantalla.
+
 # Administración de Jugadores
 
 Módulo de administración de jugadores de fútbol: backend en NestJS + PostgreSQL (TypeORM), frontend en Angular con el diseño visual "Cromo" (tarjetas fotográficas, ficha de detalle con línea de tiempo de clubes y medallas de palmarés).
